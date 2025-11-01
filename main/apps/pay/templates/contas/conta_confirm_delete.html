@@ -1,0 +1,30 @@
+{% extends 'main_app/base/base.html' %}
+
+{% block title %}Excluir Registro{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+  <div class="row justify-content-center">
+    <div class="col-lg-6">
+      <div class="card shadow-sm border-0">
+        <div class="card-header bg-danger text-white">
+          <h5 class="mb-0">Confirmar Exclusão</h5>
+        </div>
+        <div class="card-body">
+          <div class="alert alert-warning">
+            <i class="fas fa-exclamation-triangle me-1"></i>
+            Tem certeza que deseja excluir este registro{% if object %}: <strong>{{ object }}</strong>{% endif %}?
+          </div>
+          <form method="post">
+            {% csrf_token %}
+            <div class="d-flex justify-content-between">
+              <a href="{% url 'conta_list' %}" class="btn btn-outline-secondary"><i class="fas fa-arrow-left"></i> Cancelar</a>
+              <button type="submit" class="btn btn-danger"><i class="fas fa-trash"></i> Excluir</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

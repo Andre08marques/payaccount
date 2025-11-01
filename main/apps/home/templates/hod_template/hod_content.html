@@ -1,0 +1,143 @@
+{% extends 'main_app/base/base.html' %}
+{% load static %}
+{% block page_title %}{{page_title}}{% endblock page_title %}
+
+{% block custom_css %}
+
+
+{% endblock custom_css %}
+
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <!-- Small boxes (Stat box) -->
+        <div class="row">
+
+
+            <!-- Card Example - Instâncias Desconectadas -->
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card border-left-danger shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Informação
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                    <h5>Total: {{ counts.esperando_donna|default:0 }}</h5>
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="far fa-comment-dots fa-2x text-gray-300"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card border-left-info shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Informação
+                                    aceitar
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                    <h5>Total: {{ counts.esperando_aceitar|default:0 }}</h5>
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="far fa-comment-dots fa-2x text-gray-300"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card border-left-danger shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Informação
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                    <h5>Total: {{ counts.reuniao_acontecendo|default:0 }}</h5>
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="far fa-comment-dots fa-2x text-gray-300"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card border-left-danger shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Informação
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                    <h5>Total: {{ counts.reuniao_finalizada|default:0 }}</h5>
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="far fa-comment-dots fa-2x text-gray-300"></i>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="card shadow mb-3">
+            <div class="card-header py-3 shadow-sm" style="background-color: #4e73df;">
+                <h6 class="m-0 font-weight-bold text-white d-flex justify-content-between align-items-center">
+                    <span>Informações</span>
+                </h6>
+            </div>
+        </div>
+        <!-- /.row -->
+
+
+        <!-- modal -->
+        <div id="modal" class="modal fade">
+            <div id="dialog" class="modal-dialog" hx-target="this"></div>
+        </div>
+
+        <div id="modal-lg" class="modal fade">
+            <div id="dialog-lg" class="modal-dialog modal-lg" hx-target="this"></div>
+        </div>
+
+        <!-- Empty toast to show the message -->
+        <div class="toast-container position-fixed top-0 end-0 p-3">
+            <div id="toast" class="toast align-items-center text-white bg-success border-0" role="alert"
+                aria-live="assertive" aria-atomic="true">
+                <div class="d-flex">
+                    <div id="toast-body" class="toast-body"></div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+                        aria-label="Close"></button>
+                </div>
+            </div>
+        </div>
+
+</section>
+{% endblock content %}
+
+
+{% block custom_js %}
+<script>
+    $(document).ready(function () {
+        $('#tableclient').DataTable({
+            language: {
+                url: "https://cdn.datatables.net/plug-ins/1.13.6/i18n/pt-BR.json"
+            }
+        });
+    });
+</script>
+{% endblock custom_js %}

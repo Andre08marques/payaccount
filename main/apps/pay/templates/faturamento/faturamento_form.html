@@ -1,0 +1,65 @@
+{% extends 'main_app/base/base.html' %}
+
+{% block title %}{% if object %}Editar{% else %}Novo{% endif %} Faturamento{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">
+                        <i class="fas fa-chart-line me-2"></i>
+                        {% if object %}Editar{% else %}Novo{% endif %} Faturamento
+                    </h5>
+                    <a href="{% url 'faturamento_list' %}" class="btn btn-outline-secondary btn-sm">
+                        <i class="fas fa-arrow-left"></i> Voltar
+                    </a>
+                </div>
+                <div class="card-body">
+                    <form method="post" class="needs-validation" novalidate>
+                        {% csrf_token %}
+                        
+                        <div class="mb-3">
+                            <label for="{{ form.mes_referencia.id_for_label }}" class="form-label">Mês de Referência *</label>
+                            <input type="date" name="mes_referencia" 
+                                   class="form-control {% if form.mes_referencia.errors %}is-invalid{% endif %}"
+                                   value="{{ form.mes_referencia.value|date:'Y-m-d'|default:'' }}"
+                                   required>
+                            {% if form.mes_referencia.errors %}
+                                <div class="invalid-feedback">{{ form.mes_referencia.errors }}</div>
+                            {% endif %}
+                            <div class="form-text">Selecione o primeiro dia do mês de referência</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="{{ form.valor.id_for_label }}" class="form-label">Valor do Faturamento *</label>
+                            <div class="input-group">
+                                <span class="input-group-text">R$</span>
+                                <input type="number" name="valor" 
+                                       class="form-control {% if form.valor.errors %}is-invalid{% endif %}"
+                                       value="{{ form.valor.value|default:'' }}"
+                                       step="0.01" min="0.01" required>
+                            </div>
+                            {% if form.valor.errors %}
+                                <div class="invalid-feedback">{{ form.valor.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="{{ form.observacao.id_for_label }}" class="form-label">Observação</label>
+                            <textarea name="observacao" class="form-control" rows="3">{{ form.observacao.value|default:'' }}</textarea>
+                        </div>
+
+                        <div class="d-flex justify-content-end">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-2"></i> Salvar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

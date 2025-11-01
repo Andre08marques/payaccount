@@ -1,0 +1,30 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página com Vídeo e Descrição</title>
+    <meta name="description" content="Uma página simples com título, descrição e um vídeo centralizado, com fundo personalizado.">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link href="{% static 'fontawesomefree/css/fontawesome.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'fontawesomefree/css/brands.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'fontawesomefree/css/solid.css' %}" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="{% static 'dist/css/main.css'%} ">
+    <link rel="stylesheet" href="{% static 'dist/css/navbar.css'%} ">
+    {% block custom_css %}
+
+    {% endblock custom_css %}
+
+</head>
+<body>
+    <div class="mes"  style="padding-top: 60px">
+        {% include "base/message.html" %} 
+    </div>
+    {% block content %}
+    
+
+    {% endblock content %}
+
+</body>
+</html>

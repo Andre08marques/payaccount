@@ -1,0 +1,16 @@
+version: '3'
+
+services:
+    payaccount:
+        container_name: payaccount
+        image: andretimarques/payaccount:1.0.0
+        command: bash -c "python /code/manage.py migrate && python /code/manage.py collectstatic --noinput && python /code/manage.py runserver 0.0.0.0:8000"
+        ports:
+            - "8000:8000"
+        volumes:
+            - ./media:/code/media
+            - ./django.log:/code/django.log
+            - ./.env:/code/.env
+        restart: always
+        environment:
+            - TZ="America/Sao_Paulo"

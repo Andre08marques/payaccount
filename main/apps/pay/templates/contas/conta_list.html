@@ -1,0 +1,208 @@
+{% extends 'main_app/base/base.html' %}
+
+{% block title %}Contas a Pagar{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <!-- Cards de Resumo -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <h6 class="text-muted mb-1">TOTAL DAS CONTAS</h6>
+                    <h4 class="mb-0 text-primary">R$ {{ total_contas|default:"0,00" }}</h4>
+                    <small class="text-muted">Total de contas: {{ total_registros }}</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="card border-0 shadow-sm bg-success bg-opacity-10">
+                <div class="card-body">
+                    <h6 class="text-muted mb-1">EM DIA</h6>
+                    <h4 class="mb-0 text-success">R$ {{ total_em_dia|default:"0,00" }}</h4>
+                    <small class="text-muted">{{ qtd_em_dia }} contas</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="card border-0 shadow-sm bg-warning bg-opacity-10">
+                <div class="card-body">
+                    <h6 class="text-muted mb-1">VENCE HOJE</h6>
+                    <h4 class="mb-0 text-warning">R$ {{ total_vence_hoje|default:"0,00" }}</h4>
+                    <small class="text-muted">{{ qtd_vence_hoje }} contas</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="card border-0 shadow-sm bg-danger bg-opacity-10">
+                <div class="card-body">
+                    <h6 class="text-muted mb-1">EM ATRASO</h6>
+                    <h4 class="mb-0 text-danger">R$ {{ total_atrasado|default:"0,00" }}</h4>
+                    <small class="text-muted">{{ qtd_atrasadas }} contas</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm bg-white">
+                <div class="card-body">
+                    <h6 class="text-muted mb-1">FATURAMENTO</h6>
+                    <h4 class="mb-0 text-success">R$ {{ faturamento|floatformat:2 }}</h4>
+                    <small class="text-primary">Lucro: R$ {{ lucro|floatformat:2 }}</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filtros e Lista -->
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-white d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">Contas a Pagar</h5>
+            <a href="{% url 'conta_create' %}" class="btn btn-primary btn-sm">
+                <i class="fas fa-plus"></i> Nova Conta
+            </a>
+        </div>
+        <div class="card-body">
+            <!-- Filtros -->
+            <form method="get" class="row g-3 mb-4">
+                <div class="col-md">
+                    <label class="form-label">Nome da Conta</label>
+                    <input type="text" name="nome" class="form-control" value="{{ request.GET.nome }}">
+                </div>
+                <div class="col-md">
+                    <label class="form-label">Grupo de Conta</label>
+                    <select name="grupo" class="form-select">
+                        <option value="">Todos</option>
+                        {% for grupo in grupos %}
+                            <option value="{{ grupo.id }}" {% if request.GET.grupo == grupo.id|stringformat:"s" %}selected{% endif %}>
+                                {{ grupo.nome }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md">
+                    <label class="form-label">Status da Conta</label>
+                    <select name="status" class="form-select">
+                        <option value="">Todos</option>
+                        <option value="em_dia" {% if request.GET.status == 'em_dia' %}selected{% endif %}>Em dia</option>
+                        <option value="atrasada" {% if request.GET.status == 'atrasada' %}selected{% endif %}>Em atraso</option>
+                        <option value="hoje" {% if request.GET.status == 'hoje' %}selected{% endif %}>Vence hoje</option>
+                    </select>
+                </div>
+                <div class="col-md">
+                    <label class="form-label">Recorrência</label>
+                    <select name="recorrencia" class="form-select">
+                        <option value="">Todas</option>
+                        {% for value, label in form.recorrencia.field.choices %}
+                            <option value="{{ value }}" {% if request.GET.recorrencia == value %}selected{% endif %}>
+                                {{ label }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md">
+                    <label class="form-label">Tipo</label>
+                    <select name="tipo" class="form-select">
+                        <option value="">Todos</option>
+                        {% for value, label in form.fixo_variado.field.choices %}
+                            <option value="{{ value }}" {% if request.GET.tipo == value %}selected{% endif %}>
+                                {{ label }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md align-self-end">
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="fas fa-search"></i> Buscar
+                    </button>
+                </div>
+            </form>
+
+            <!-- Tabela -->
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Nº</th>
+                            <th>Nome da Conta</th>
+                            <th>Grupo de Conta</th>
+                            <th>Status</th>
+                            <th>Recorrência</th>
+                            <th>Fixo/Variado</th>
+                            <th>Data Vencimento</th>
+                            <th class="text-end">Valor</th>
+                            <th class="text-center">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for conta in contas %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ conta.nome_conta }}</td>
+                            <td>{{ conta.grupo_conta.nome }}</td>
+                            <td>
+                                {% if conta.pago %}
+                                    <span class="badge bg-secondary">Pago</span>
+                                {% elif conta.is_vencida %}
+                                    <span class="badge bg-danger">Em Atraso</span>
+                                {% elif conta.data_vencimento == hoje %}
+                                    <span class="badge bg-warning text-dark">Vence Hoje</span>
+                                {% else %}
+                                    <span class="badge bg-success">Em Dia</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ conta.get_recorrencia_display }}</td>
+                            <td>{{ conta.get_fixo_variado_display }}</td>
+                            <td>{{ conta.data_vencimento|date:"d/m/Y" }}</td>
+                            <td class="text-end">R$ {{ conta.valor }}</td>
+                            <td class="text-center">
+                                <a href="{% url 'conta_update' conta.pk %}" class="btn btn-sm btn-outline-primary">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <a href="{% url 'conta_delete' conta.pk %}" class="btn btn-sm btn-outline-danger">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="9" class="text-center py-4">
+                                <div class="text-muted">
+                                    <i class="fas fa-inbox fa-2x mb-3"></i>
+                                    <p class="mb-0">Nenhuma conta encontrada</p>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            {% if is_paginated %}
+            <nav class="mt-3">
+                <ul class="pagination justify-content-center">
+                    {% if page_obj.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">
+                            <i class="fas fa-chevron-left"></i>
+                        </a>
+                    </li>
+                    {% endif %}
+                    
+                    <li class="page-item active">
+                        <span class="page-link">{{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span>
+                    </li>
+                    
+                    {% if page_obj.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">
+                            <i class="fas fa-chevron-right"></i>
+                        </a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </nav>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

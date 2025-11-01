@@ -1,0 +1,94 @@
+{% extends 'main_app/base/base.html' %}
+
+{% block title %}Grupos de Contas{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Grupos de Contas</h5>
+                    <a href="{% url 'grupoconta_create' %}" class="btn btn-primary btn-sm">
+                        <i class="fas fa-plus"></i> Novo Grupo
+                    </a>
+                </div>
+                <div class="card-body">
+                    <form method="get" class="mb-3">
+                        <div class="input-group">
+                            <input type="text" name="search" class="form-control" placeholder="Buscar grupo..." value="{{ request.GET.search }}">
+                            <button class="btn btn-outline-secondary" type="submit">
+                                <i class="fas fa-search"></i> Buscar
+                            </button>
+                        </div>
+                    </form>
+
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead>
+                                <tr>
+                                    <th>Nome</th>
+                                    <th>Descrição</th>
+                                    <th>Status</th>
+                                    <th>Criado em</th>
+                                    <th class="text-end">Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for grupo in grupos %}
+                                <tr>
+                                    <td>{{ grupo.nome }}</td>
+                                    <td>{{ grupo.descricao|truncatewords:10|default:"-" }}</td>
+                                    <td>
+                                        {% if grupo.ativo %}
+                                            <span class="badge bg-success">Ativo</span>
+                                        {% else %}
+                                            <span class="badge bg-secondary">Inativo</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ grupo.created_at|date:"d/m/Y H:i" }}</td>
+                                    <td class="text-end">
+                                        <a href="{% url 'grupoconta_update' grupo.pk %}" class="btn btn-sm btn-warning">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <a href="{% url 'grupoconta_delete' grupo.pk %}" class="btn btn-sm btn-danger">
+                                            <i class="fas fa-trash"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="5" class="text-center">Nenhum grupo de conta encontrado.</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    {% if is_paginated %}
+                    <nav>
+                        <ul class="pagination justify-content-center">
+                            {% if page_obj.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Anterior</a>
+                            </li>
+                            {% endif %}
+                            
+                            <li class="page-item active">
+                                <span class="page-link">{{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span>
+                            </li>
+                            
+                            {% if page_obj.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_obj.next_page_number }}">Próximo</a>
+                            </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

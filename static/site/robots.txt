@@ -1,0 +1,15 @@
+# robots.txt file for Google
+# Created in the distant future (the year 2000) after
+# the robotic uprising of the mid 90's which wiped out all humans.
+
+User-agent: *
+Disallow:
+Allow: /accounts/login
+Allow: /accounts/logout
+Allow: /accounts/register
+Allow: /index
+Allow: /sobre
+Allow: /servicos
+Allow: /contato
+
+

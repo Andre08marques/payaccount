@@ -1,0 +1,127 @@
+/*
+INDEX.HTML
+*/
+body {
+    overflow-x: hidden;
+}
+
+/* navbar */
+
+.navbar .nav-link {
+    font-size: 14px;
+    text-transform: uppercase;
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+}
+
+.navbar .nav-item.active {
+    border-left: #444 3px solid;
+}
+
+
+/* carousel */
+
+/* titulo (FAVOR MUDAR A IMAGEM AQUI)*/ 
+/*
+#home-heading {
+    position: relative;
+    min-height: 200px;
+    background: url("{% static 'img/tatame.jpeg' %}");
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    text-align: center;
+    color: #fff;
+    background-size: cover;
+}
+    */
+
+/*
+.dark-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.7); 
+}
+*/
+
+/* titulo (FAVOR MUDAR A IMAGEM AQUI)*/ 
+
+/* video institucional */
+/*
+#video-play{
+    position: relative;
+    min-height: 200px;
+    background: url("{% static 'img/tatame2.png' %}");
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    background-position: 0 -300px;
+    text-align: center;
+    color: #fff;
+}
+    */
+
+#video-play a {
+    color: #fff;
+}
+/* video institucional */
+
+
+/* SOBRE.HTML */
+/* Imagem sobre */
+
+
+
+.sobre-img {
+    max-width: 100%; /* Garante que a imagem não ultrapasse a largura do contêiner */
+    height: auto; /* Mantém a proporção da imagem */
+    margin-top: -50px; /* Ajusta o posicionamento da imagem se necessário */
+}
+
+
+
+/* Ajustes específicos para dispositivos móveis */
+@media (max-width: 767px) {
+    #page-header {
+        height: 150px; /* Reduz a altura do cabeçalho em telas menores */
+        padding-top: 30px; /* Ajusta o padding para a altura reduzida */
+    }
+
+    .sobre-img {
+        width: 100%; /* Ajusta a largura da imagem para 100% do contêiner em dispositivos móveis */
+        height: auto; /* Mantém a proporção da imagem */
+        margin-top: 0; /* Remove o margin-top em dispositivos móveis */
+    }
+
+    /* Ajustes para tabelas em dispositivos móveis */
+    .table {
+        font-size: 0.9rem; /* Reduz o tamanho da fonte das tabelas */
+    }
+}
+
+
+
+/* page header(sobre.html) */
+
+
+/* SERVICOS.HTML(FAQ) */
+#faq .card{
+    border: #444;
+}
+
+#faq a {
+    color: #fff;
+    text-decoration: none;
+}
+
+#faq .card-body, 
+#faq .card-header {
+    background: #333;
+}
+
+/* FOOTER */
+#main-footer{
+    background: #000;
+    color: #fff;
+}

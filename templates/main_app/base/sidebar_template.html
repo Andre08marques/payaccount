@@ -1,0 +1,87 @@
+{% load static %}
+
+<aside class="main-sidebar sidebar-dark-info elevation-4">
+    <div class="sidebar">
+        <!-- Sidebar user panel (optional) -->
+        <nav class="mt-2">
+            <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+                <div class="image">
+                    <img src="{% static 'dist/img/user.png' %}" class="img-circle elevation-2" alt="User Image">
+                </div>
+                <div class="info">
+                    <a href="#" class="d-block">{{user.first_name}} {{user.last_name}}</a>
+                </div>
+            </div>
+        </nav>
+        <!-- Sidebar Menu -->
+        <nav class="mt-2">
+            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+
+                <li class="nav-item">
+                    <!-- {% url 'home' as home %} -->
+                    <a href="{% url 'home' %}" class="nav-link {% if request.resolver_match.url_name == 'home' %} active {% endif %}">
+                        <i class="nav-icon fas fa-home"></i>
+                        <p>
+                            Home
+
+                        </p>
+                    </a>
+                </li>
+
+                <li class="nav-item has-treeview {% if request.resolver_match.url_name == 'listunidade' %} active {% endif %}">
+                    <a href="#" class="nav-link">
+                        <i class="nav-icon ffas fa-dollar-sign"></i>
+                        <p>
+                            Contas
+                            <i class="fas fa-angle-left right"></i>
+                        </p>
+                    </a>
+                
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{% url 'grupoconta_list' %}"
+                               class="nav-link {% if request.resolver_match.url_name == 'listunidade' %} active {% endif %}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Cadastrar Grupo de contas</p>
+                            </a>
+                        </li>
+                    
+                    </ul>
+
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{% url 'conta_list' %}"
+                               class="nav-link {% if request.resolver_match.url_name == 'listunidade' %} active {% endif %}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Cadastrar contas</p>
+                            </a>
+                        </li>
+                    </ul>
+
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{% url 'faturamento_list' %}"
+                               class="nav-link {% if request.resolver_match.url_name == 'faturamento_list' %} active {% endif %}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Cadastrar Faturamento</p>
+                            </a>
+                        </li>
+                    </ul>
+                    
+                </li>
+
+                <li class="nav-item">
+                    <form method="post" action="{% url 'logout' %}" style="display: inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="nav-link btn btn-link logout-btn">
+                            <i class="nav-icon fas fa-power-off"></i>
+                            <p>Logout</p>
+                        </button>
+                    </form>
+                </li>
+            </ul>
+        </nav>
+        <!-- /.sidebar-menu -->
+    </div>
+    <!-- /.sidebar -->
+</aside>

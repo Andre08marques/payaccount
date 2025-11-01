@@ -1,0 +1,25 @@
+<section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        {% if messages %}
+                        {% for message in messages  %}
+            
+                        {% if message.tags == 'success' %}
+                        <div class="alert alert-success">
+                            {{message}}
+                        </div>
+                        {% else %}
+                        <div class="alert alert-danger">
+                            {{message}}
+                        </div>
+                        {% endif %}
+            
+                        {% endfor %}
+                        {% endif %}
+                    </div>
+               </div>
+            </div>
+       </div>
+</section>
