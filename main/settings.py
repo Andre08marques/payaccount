@@ -99,17 +99,24 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
+# LOGIN
+LOGOUT_REDIRECT_URL = 'login'
+LOGIN_REDIRECT_URL = 'home'
+
 LANGUAGE_CODE = 'pt-BR'
 USE_I18N = True
 
 TIME_ZONE = 'America/Sao_Paulo'
 USE_TZ = True
 
-STATIC_URL = '/static/'
+
+STATIC_URL = 'static/'
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static")
 ]
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # LOGIN
 LOGOUT_REDIRECT_URL = '/accounts/login/'
