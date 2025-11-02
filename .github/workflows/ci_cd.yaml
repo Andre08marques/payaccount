@@ -1,4 +1,4 @@
-name: CI Sistema RH quiz
+name: CI Sistema PayAccount
 
 on:
   push:
