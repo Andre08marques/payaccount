@@ -3,7 +3,7 @@ version: '3'
 services:
     payaccount:
         container_name: payaccount
-        image: andretimarques/payaccount:v0.0.5
+        image: andretimarques/payaccount:v0.0.6
         command: bash -c "python /code/manage.py migrate && python /code/manage.py collectstatic --noinput && python /code/manage.py runserver 0.0.0.0:8000"
         ports:
             - "8000:8000"
