@@ -7,7 +7,7 @@
     <div class="row">
         <div class="col-12">
             <div class="card shadow-sm border-0">
-                <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                <div class="card-header bg-white d-flex justify-content-between align-items-center border-bottom">
                     <h5 class="mb-0">{% if object %}Editar{% else %}Nova{% endif %} Conta a Pagar</h5>
                     <a href="{% url 'conta_list' %}" class="btn btn-outline-secondary btn-sm">
                         <i class="fas fa-arrow-left"></i> Voltar
@@ -17,200 +17,164 @@
                     <form method="post" class="needs-validation" novalidate>
                         {% csrf_token %}
                         
-                        <!-- Navegação das Tabs -->
-                        <ul class="nav nav-tabs mb-3" id="contaTab" role="tablist">
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link active" id="basico-tab" data-bs-toggle="tab" data-bs-target="#basico" type="button" role="tab" aria-selected="true">
-                                    <i class="fas fa-info-circle"></i> Informações Básicas
-                                </button>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="financeiro-tab" data-bs-toggle="tab" data-bs-target="#financeiro" type="button" role="tab">
-                                    <i class="fas fa-dollar-sign"></i> Dados Financeiros
-                                </button>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="fornecedor-tab" data-bs-toggle="tab" data-bs-target="#fornecedor" type="button" role="tab">
-                                    <i class="fas fa-user"></i> Fornecedor
-                                </button>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="pagamento-tab" data-bs-toggle="tab" data-bs-target="#pagamento" type="button" role="tab">
-                                    <i class="fas fa-money-bill"></i> Dados de Pagamento
-                                </button>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="veiculo-tab" data-bs-toggle="tab" data-bs-target="#veiculo" type="button" role="tab">
-                                    <i class="fas fa-car"></i> Veículo
-                                </button>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="acesso-tab" data-bs-toggle="tab" data-bs-target="#acesso" type="button" role="tab">
-                                    <i class="fas fa-key"></i> Dados de Acesso
-                                </button>
-                            </li>
-                        </ul>
+                        <!-- Informações Básicas -->
+                        <div class="section-header mb-3">
+                            <h6 class="text-primary mb-0">
+                                <i class="fas fa-info-circle me-2"></i>Informações Básicas
+                            </h6>
+                        </div>
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-6">
+                                <label for="{{ form.nome_conta.id_for_label }}" class="form-label">{{ form.nome_conta.label }}*</label>
+                                {{ form.nome_conta }}
+                                {% if form.nome_conta.errors %}
+                                    <div class="invalid-feedback d-block">{{ form.nome_conta.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6">
+                                <label for="{{ form.grupo_conta.id_for_label }}" class="form-label">{{ form.grupo_conta.label }}*</label>
+                                {{ form.grupo_conta }}
+                            </div>
+                            <div class="col-md-6">
+                                <label for="{{ form.fixo_variado.id_for_label }}" class="form-label">{{ form.fixo_variado.label }}</label>
+                                {{ form.fixo_variado }}
+                            </div>
+                            <div class="col-md-6">
+                                <label for="{{ form.recorrencia.id_for_label }}" class="form-label">{{ form.recorrencia.label }}</label>
+                                {{ form.recorrencia }}
+                            </div>
+                        </div>
 
-                        <!-- Conteúdo das Tabs -->
-                        <div class="tab-content" id="contaTabContent">
-                            <!-- Informações Básicas -->
-                            <div class="tab-pane fade show active" id="basico" role="tabpanel">
-                                <div class="row g-3">
-                                    <div class="col-md-6">
-                                        <label for="{{ form.nome_conta.id_for_label }}" class="form-label">{{ form.nome_conta.label }}*</label>
-                                        {{ form.nome_conta }}
-                                        {% if form.nome_conta.errors %}
-                                            <div class="invalid-feedback d-block">{{ form.nome_conta.errors }}</div>
-                                        {% endif %}
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label for="{{ form.grupo_conta.id_for_label }}" class="form-label">{{ form.grupo_conta.label }}*</label>
-                                        {{ form.grupo_conta }}
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label for="{{ form.fixo_variado.id_for_label }}" class="form-label">{{ form.fixo_variado.label }}</label>
-                                        {{ form.fixo_variado }}
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label for="{{ form.recorrencia.id_for_label }}" class="form-label">{{ form.recorrencia.label }}</label>
-                                        {{ form.recorrencia }}
-                                    </div>
+                        <!-- Dados Financeiros -->
+                        <div class="section-header mb-3">
+                            <h6 class="text-primary mb-0">
+                                <i class="fas fa-dollar-sign me-2"></i>Dados Financeiros
+                            </h6>
+                        </div>
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-12">
+                                <label for="{{ form.nome_razao.id_for_label }}" class="form-label">{{ form.nome_razao.label }}</label>
+                                {{ form.nome_razao }}
+                            </div>
+                            <div class="col-md-12">
+                                <label for="{{ form.cpf_cnpj.id_for_label }}" class="form-label">{{ form.cpf_cnpj.label }}</label>
+                                {{ form.cpf_cnpj }}
+                                <div class="form-text small">{{ form.cpf_cnpj.help_text }}</div>
+                            </div>
+                            <div class="col-md-12">
+                                <label for="{{ form.tipo_pagamento.id_for_label }}" class="form-label">{{ form.tipo_pagamento.label }}</label>
+                                {{ form.tipo_pagamento }}
+                            </div>
+                            <div class="col-md-12">
+                                <label for="{{ form.numero_conta_pix.id_for_label }}" class="form-label">{{ form.numero_conta_pix.label }}</label>
+                                {{ form.numero_conta_pix }}
+                            </div>
+                            <div class="col-md-12">
+                                <label for="{{ form.agencia.id_for_label }}" class="form-label">{{ form.agencia.label }}</label>
+                                {{ form.agencia }}
+                            </div>
+                            <div class="col-md-12">
+                                <label for="{{ form.conta_corrente_poupanca.id_for_label }}" class="form-label">{{ form.conta_corrente_poupanca.label }}</label>
+                                {{ form.conta_corrente_poupanca }}
+                            </div>
+                            <div class="col-md-12">
+                                <label for="{{ form.banco_origem.id_for_label }}" class="form-label">{{ form.banco_origem.label }}</label>
+                                {{ form.banco_origem }}
+                            </div>
+                            <div class="col-md-6">
+                                <label for="{{ form.valor.id_for_label }}" class="form-label">{{ form.valor.label }}*</label>
+                                {{ form.valor }}
+                            </div>
+                            <div class="col-md-6">
+                                <label for="{{ form.data_vencimento.id_for_label }}" class="form-label">{{ form.data_vencimento.label }}*</label>
+                                {{ form.data_vencimento }}
+                            </div>
+                            <div class="col-md-12">
+                                <label for="{{ form.data_pagamento.id_for_label }}" class="form-label">{{ form.data_pagamento.label }}</label>
+                                {{ form.data_pagamento }}
+                            </div>
+                        </div>
+
+                        <!-- Dados de Acesso -->
+                        <div class="section-header mb-3">
+                            <h6 class="text-primary mb-0">
+                                <i class="fas fa-key me-2"></i>Dados de Acesso
+                            </h6>
+                        </div>
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-12">
+                                <label for="{{ form.link_acesso_pagamento.id_for_label }}" class="form-label">{{ form.link_acesso_pagamento.label }}</label>
+                                {{ form.link_acesso_pagamento }}
+                            </div>
+                            <div class="col-md-12">
+                                <label for="{{ form.usuario.id_for_label }}" class="form-label">{{ form.usuario.label }}</label>
+                                {{ form.usuario }}
+                            </div>
+                            <div class="col-md-12">
+                                <label for="{{ form.senha.id_for_label }}" class="form-label">{{ form.senha.label }}</label>
+                                {{ form.senha }}
+                                <div class="form-text small">{{ form.senha.help_text }}</div>
+                            </div>
+                            <div class="col-md-12">
+                                <label for="{{ form.whatsapp_confirmacao.id_for_label }}" class="form-label">{{ form.whatsapp_confirmacao.label }}</label>
+                                {{ form.whatsapp_confirmacao }}
+                                <div class="form-text small">{{ form.whatsapp_confirmacao.help_text }}</div>
+                            </div>
+                            <div class="col-md-12">
+                                <label for="{{ form.link_passo_passo.id_for_label }}" class="form-label">{{ form.link_passo_passo.label }}</label>
+                                {{ form.link_passo_passo }}
+                            </div>
+                            <div class="col-md-12">
+                                <label for="{{ form.descricao_observacao.id_for_label }}" class="form-label">{{ form.descricao_observacao.label }}</label>
+                                {{ form.descricao_observacao }}
+                            </div>
+                        </div>
+
+                        <!-- Veículo -->
+                        <div class="section-header mb-3">
+                            <h6 class="text-primary mb-0">
+                                <i class="fas fa-car me-2"></i>Veículo
+                            </h6>
+                        </div>
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-12">
+                                <label for="{{ form.modelo.id_for_label }}" class="form-label">{{ form.modelo.label }}</label>
+                                {{ form.modelo }}
+                            </div>
+                            <div class="col-md-12">
+                                <label for="{{ form.placa.id_for_label }}" class="form-label">{{ form.placa.label }}</label>
+                                {{ form.placa }}
+                            </div>
+                            <div class="col-md-12">
+                                <label for="{{ form.renavam.id_for_label }}" class="form-label">{{ form.renavam.label }}</label>
+                                {{ form.renavam }}
+                            </div>
+                            <div class="col-md-12">
+                                <label for="{{ form.ano_fabricacao.id_for_label }}" class="form-label">{{ form.ano_fabricacao.label }}</label>
+                                {{ form.ano_fabricacao }}
+                            </div>
+                            <div class="col-12 mt-3">
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" id="{{ form.ipva_multa.id_for_label }}" name="{{ form.ipva_multa.html_name }}" {% if form.ipva_multa.value %}checked{% endif %}>
+                                    <label class="form-check-label" for="{{ form.ipva_multa.id_for_label }}">
+                                        {{ form.ipva_multa.label }}
+                                    </label>
                                 </div>
                             </div>
-
-                            <!-- Dados Financeiros -->
-                            <div class="tab-pane fade" id="financeiro" role="tabpanel">
-                                <div class="row g-3">
-                                    <div class="col-md-6">
-                                        <label for="{{ form.valor.id_for_label }}" class="form-label">{{ form.valor.label }}*</label>
-                                        {{ form.valor }}
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label for="{{ form.data_vencimento.id_for_label }}" class="form-label">{{ form.data_vencimento.label }}*</label>
-                                        {{ form.data_vencimento }}
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-check mt-4">
-                                            {{ form.pago }}
-                                            <label class="form-check-label" for="{{ form.pago.id_for_label }}">
-                                                {{ form.pago.label }}
-                                            </label>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label for="{{ form.data_pagamento.id_for_label }}" class="form-label">{{ form.data_pagamento.label }}</label>
-                                        {{ form.data_pagamento }}
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Fornecedor -->
-                            <div class="tab-pane fade" id="fornecedor" role="tabpanel">
-                                <div class="row g-3">
-                                    <div class="col-md-6">
-                                        <label for="{{ form.nome_razao.id_for_label }}" class="form-label">{{ form.nome_razao.label }}</label>
-                                        {{ form.nome_razao }}
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label for="{{ form.cpf_cnpj.id_for_label }}" class="form-label">{{ form.cpf_cnpj.label }}</label>
-                                        {{ form.cpf_cnpj }}
-                                        <div class="form-text">{{ form.cpf_cnpj.help_text }}</div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Dados de Pagamento -->
-                            <div class="tab-pane fade" id="pagamento" role="tabpanel">
-                                <div class="row g-3">
-                                    <div class="col-md-6">
-                                        <label for="{{ form.tipo_pagamento.id_for_label }}" class="form-label">{{ form.tipo_pagamento.label }}</label>
-                                        {{ form.tipo_pagamento }}
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label for="{{ form.numero_conta_pix.id_for_label }}" class="form-label">{{ form.numero_conta_pix.label }}</label>
-                                        {{ form.numero_conta_pix }}
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label for="{{ form.agencia.id_for_label }}" class="form-label">{{ form.agencia.label }}</label>
-                                        {{ form.agencia }}
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label for="{{ form.conta_corrente_poupanca.id_for_label }}" class="form-label">{{ form.conta_corrente_poupanca.label }}</label>
-                                        {{ form.conta_corrente_poupanca }}
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label for="{{ form.banco_origem.id_for_label }}" class="form-label">{{ form.banco_origem.label }}</label>
-                                        {{ form.banco_origem }}
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Veículo -->
-                            <div class="tab-pane fade" id="veiculo" role="tabpanel">
-                                <div class="row g-3">
-                                    <div class="col-md-6">
-                                        <label for="{{ form.modelo.id_for_label }}" class="form-label">{{ form.modelo.label }}</label>
-                                        {{ form.modelo }}
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label for="{{ form.placa.id_for_label }}" class="form-label">{{ form.placa.label }}</label>
-                                        {{ form.placa }}
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label for="{{ form.renavam.id_for_label }}" class="form-label">{{ form.renavam.label }}</label>
-                                        {{ form.renavam }}
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label for="{{ form.ano_fabricacao.id_for_label }}" class="form-label">{{ form.ano_fabricacao.label }}</label>
-                                        {{ form.ano_fabricacao }}
-                                    </div>
-                                    <div class="col-12">
-                                        <div class="form-check">
-                                            {{ form.ipva_multa }}
-                                            <label class="form-check-label" for="{{ form.ipva_multa.id_for_label }}">
-                                                {{ form.ipva_multa.label }}
-                                            </label>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Dados de Acesso -->
-                            <div class="tab-pane fade" id="acesso" role="tabpanel">
-                                <div class="row g-3">
-                                    <div class="col-12">
-                                        <label for="{{ form.link_acesso_pagamento.id_for_label }}" class="form-label">{{ form.link_acesso_pagamento.label }}</label>
-                                        {{ form.link_acesso_pagamento }}
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label for="{{ form.usuario.id_for_label }}" class="form-label">{{ form.usuario.label }}</label>
-                                        {{ form.usuario }}
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label for="{{ form.senha.id_for_label }}" class="form-label">{{ form.senha.label }}</label>
-                                        {{ form.senha }}
-                                        <div class="form-text">{{ form.senha.help_text }}</div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label for="{{ form.whatsapp_confirmacao.id_for_label }}" class="form-label">{{ form.whatsapp_confirmacao.label }}</label>
-                                        {{ form.whatsapp_confirmacao }}
-                                        <div class="form-text">{{ form.whatsapp_confirmacao.help_text }}</div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label for="{{ form.link_passo_passo.id_for_label }}" class="form-label">{{ form.link_passo_passo.label }}</label>
-                                        {{ form.link_passo_passo }}
-                                    </div>
-                                    <div class="col-12">
-                                        <label for="{{ form.descricao_observacao.id_for_label }}" class="form-label">{{ form.descricao_observacao.label }}</label>
-                                        {{ form.descricao_observacao }}
-                                    </div>
+                            <div class="col-12">
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" id="{{ form.pago.id_for_label }}" name="{{ form.pago.html_name }}" {% if form.pago.value %}checked{% endif %}>
+                                    <label class="form-check-label" for="{{ form.pago.id_for_label }}">
+                                        {{ form.pago.label }}
+                                    </label>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="d-flex justify-content-end mt-4">
-                            <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-save"></i> Salvar
+                        <!-- Botões de ação -->
+                        <div class="d-flex justify-content-end mt-4 pt-3 border-top">
+                            <button type="submit" class="btn btn-primary btn-rounded px-4">
+                                <i class="fas fa-save me-2"></i>Salvar Alterações
                             </button>
                         </div>
                     </form>
@@ -219,6 +183,45 @@
         </div>
     </div>
 </div>
+
+<style>
+.section-header {
+    border-bottom: 2px solid #e9ecef;
+    padding-bottom: 0.5rem;
+}
+
+.section-header h6 {
+    font-weight: 600;
+}
+
+.form-label {
+    font-weight: 500;
+    color: #495057;
+    margin-bottom: 0.5rem;
+}
+
+.form-control, .form-select {
+    border: 1px solid #dee2e6;
+    border-radius: 0.375rem;
+    padding: 0.625rem 0.75rem;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+.form-text {
+    color: #6c757d;
+    margin-top: 0.25rem;
+}
+
+.btn-rounded {
+    border-radius: 10px;
+    font-weight: 500;
+    padding: 0.625rem 2rem;
+}
+</style>
 
 {% block extra_js %}
 <script>

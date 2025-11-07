@@ -36,6 +36,16 @@
                             <i class="fas fa-angle-left right"></i>
                         </p>
                     </a>
+
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{% url 'conta_list' %}"
+                               class="nav-link {% if request.resolver_match.url_name == 'listunidade' %} active {% endif %}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Cadastrar contas</p>
+                            </a>
+                        </li>
+                    </ul>
                 
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
@@ -46,16 +56,6 @@
                             </a>
                         </li>
                     
-                    </ul>
-
-                    <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <a href="{% url 'conta_list' %}"
-                               class="nav-link {% if request.resolver_match.url_name == 'listunidade' %} active {% endif %}">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Cadastrar contas</p>
-                            </a>
-                        </li>
                     </ul>
 
                     <ul class="nav nav-treeview">
