@@ -30,7 +30,18 @@
                         </div>
 
                         <div class="mb-3">
-                            <label for="{{ form.FaturamentoModoBank_PIX.id_for_label }}" class="form-label">Valor do Pagamento em Loja</label>
+                            <label for="{{ form.FaturamentoLoja.id_for_label }}" class="form-label">Pagamento em Loja</label>
+                            <div class="input-group">
+                                <span class="input-group-text">R$</span>
+                                {{ form.FaturamentoLoja }}
+                            </div>
+                            {% if form.FaturamentoLoja.errors %}
+                                <div class="invalid-feedback d-block">{{ form.FaturamentoLoja.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="{{ form.FaturamentoModoBank_PIX.id_for_label }}" class="form-label">ModoBank PIX</label>
                             <div class="input-group">
                                 <span class="input-group-text">R$</span>
                                 {{ form.FaturamentoModoBank_PIX }}
@@ -41,7 +52,7 @@
                         </div>
 
                         <div class="mb-3">
-                            <label for="{{ form.FaturamentoModoBank_Cartao.id_for_label }}" class="form-label">Valor do ModoBank Cartão</label>
+                            <label for="{{ form.FaturamentoModoBank_Cartao.id_for_label }}" class="form-label">ModoBank Cartão</label>
                             <div class="input-group">
                                 <span class="input-group-text">R$</span>
                                 {{ form.FaturamentoModoBank_Cartao }}
@@ -52,7 +63,7 @@
                         </div>
 
                         <div class="mb-3">
-                            <label for="{{ form.FaturamentoEfiBank_Boleto.id_for_label }}" class="form-label">Valor do EfiBank Boleto</label>
+                            <label for="{{ form.FaturamentoEfiBank_Boleto.id_for_label }}" class="form-label">EfiBank Boleto</label>
                             <div class="input-group">
                                 <span class="input-group-text">R$</span>
                                 {{ form.FaturamentoEfiBank_Boleto }}
@@ -63,7 +74,7 @@
                         </div>
 
                         <div class="mb-3">
-                            <label for="{{ form.FaturamentoCelcoin_Cartao.id_for_label }}" class="form-label">Valor do Faturamento Celcoin Cartão</label>
+                            <label for="{{ form.FaturamentoCelcoin_Cartao.id_for_label }}" class="form-label">Celcoin Cartão</label>
                             <div class="input-group">
                                 <span class="input-group-text">R$</span>
                                 {{ form.FaturamentoCelcoin_Cartao }}
@@ -74,7 +85,7 @@
                         </div>
 
                         <div class="mb-3">
-                            <label for="{{ form.FaturamentoMaquinaCartao.id_for_label }}" class="form-label">Valor do Faturamento Maquina Cartão</label>
+                            <label for="{{ form.FaturamentoMaquinaCartao.id_for_label }}" class="form-label">Maquina Cartão</label>
                             <div class="input-group">
                                 <span class="input-group-text">R$</span>
                                 {{ form.FaturamentoMaquinaCartao }}
@@ -118,6 +129,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Seleciona todos os campos de valor
     const camposPagamento = [
         'FaturamentoModoBank_PIX',
+        'FaturamentoLoja',
         'FaturamentoModoBank_Cartao',
         'FaturamentoEfiBank_Boleto',
         'FaturamentoCelcoin_Cartao',
@@ -161,4 +173,29 @@ document.addEventListener('DOMContentLoaded', function() {
     calcularTotal();
 });
 </script>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+
+<script>
+$(document).ready(function() {
+    // Aplica máscara de moeda
+    $('input[data-mask="real"]').mask('#.##0,00', {reverse: true});
+
+    // Antes de enviar o form, converte para padrão numérico
+    $('form').on('submit', function() {
+        $('input[data-mask="real"]').each(function() {
+            let val = $(this).val();
+            if (val) {
+                // Remove pontos e troca vírgula por ponto
+                val = val.replace(/\./g, '').replace(',', '.');
+                $(this).val(val);
+            }
+        });
+    });
+});
+</script>
+
+
+
 {% endblock %}

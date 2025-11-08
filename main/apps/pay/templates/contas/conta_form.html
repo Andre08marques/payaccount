@@ -2,7 +2,34 @@
 
 {% block title %}{% if object %}Editar{% else %}Nova{% endif %} Conta a Pagar{% endblock %}
 
+{% block custom_css %}
+    <style>
+        /* 🔹 Reduz o espaço entre os campos dentro das rows */
+        .row.g-3 {
+            --bs-gutter-y: 0.5rem !important; /* reduz o espaçamento vertical */
+            --bs-gutter-x: 0.5rem !important; /* reduz o espaçamento horizontal */
+        }
+
+        /* 🔹 Diminui a margem inferior entre as seções */
+        .row.g-3.mb-4 {
+            margin-bottom: 1rem !important; /* padrão era 1.5rem */
+        }
+
+        /* 🔹 Ajusta o espaçamento entre labels e inputs */
+        .form-label {
+            margin-bottom: 0.3rem !important;
+        }
+
+        /* 🔹 Opcional: inputs mais compactos */
+        .form-control, .form-select {
+            padding: 0.4rem 0.6rem !important;
+        }
+    </style>
+
+{% endblock custom_css %}
+
 {% block content %}
+
 <div class="container-fluid py-4">
     <div class="row">
         <div class="col-12">

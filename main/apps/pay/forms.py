@@ -39,10 +39,10 @@ class ContaForm(forms.ModelForm):
         fields = '__all__'
         widgets = {
             'data_vencimento': forms.DateInput(
-                attrs={'class': 'form-control', 'type': 'date'}
+                attrs={'class': 'form-control form-control-sm', 'type': 'date'}
             ),
             'data_pagamento': forms.DateInput(
-                attrs={'class': 'form-control', 'type': 'date'}
+                attrs={'class': 'form-control form-control-sm', 'type': 'date'}
             ),
         }
 
@@ -55,7 +55,7 @@ class ContaForm(forms.ModelForm):
                 if widget.__class__.__name__ in ['CheckboxInput', 'CheckboxSelectMultiple', 'RadioSelect']:
                     widget.attrs['class'] = (widget.attrs.get('class', '') + ' form-check-input').strip()
                 else:
-                    widget.attrs['class'] = (widget.attrs.get('class', '') + ' form-control').strip()
+                    widget.attrs['class'] = (widget.attrs.get('class', '') + ' form-control form-control-sm').strip()
             if not widget.attrs.get('placeholder') and getattr(field, 'label', None):
                 widget.attrs['placeholder'] = field.label
 
@@ -139,10 +139,23 @@ class FaturamentoForm(forms.ModelForm):
         widget=forms.NumberInput(attrs={
             'class': 'form-control',
             'step': '0.01',
-            'min': '0.01'
+            'min': '0.01',
         })
     )
     
+    FaturamentoLoja = forms.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        required=False,
+        localize=False,
+        widget=forms.NumberInput(attrs={
+            'class': 'form-control',
+            'step': '0.01',
+            'min': '0.01',
+            
+        })
+    )
+
     FaturamentoModoBank_Cartao = forms.DecimalField(
         max_digits=10,
         decimal_places=2,
@@ -151,7 +164,8 @@ class FaturamentoForm(forms.ModelForm):
         widget=forms.NumberInput(attrs={
             'class': 'form-control',
             'step': '0.01',
-            'min': '0.01'
+            'min': '0.01',
+            'data-mask': 'real'
         })
     )
     
@@ -163,7 +177,8 @@ class FaturamentoForm(forms.ModelForm):
         widget=forms.NumberInput(attrs={
             'class': 'form-control',
             'step': '0.01',
-            'min': '0.01'
+            'min': '0.01',
+            'data-mask': 'real'
         })
     )
     
@@ -175,7 +190,8 @@ class FaturamentoForm(forms.ModelForm):
         widget=forms.NumberInput(attrs={
             'class': 'form-control',
             'step': '0.01',
-            'min': '0.01'
+            'min': '0.01',
+            'data-mask': 'real'
         })
     )
     
@@ -187,7 +203,8 @@ class FaturamentoForm(forms.ModelForm):
         widget=forms.NumberInput(attrs={
             'class': 'form-control',
             'step': '0.01',
-            'min': '0.01'
+            'min': '0.01',
+            'data-mask': 'real'
         })
     )
     
@@ -200,7 +217,8 @@ class FaturamentoForm(forms.ModelForm):
             'class': 'form-control',
             'step': '0.01',
             'min': '0.01',
-            'readonly': 'readonly'
+            'readonly': 'readonly',
+            
         })
     )
     

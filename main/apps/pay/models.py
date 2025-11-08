@@ -45,6 +45,7 @@ class ContaPagar(models.Model):
         ('cartao_debito', 'Cartão de Débito'),
         ('debito_automatico', 'Débito Automático'),
         ('link_pagamento', 'Link de Pagamento'),
+        ('pix_qr_code', 'Pix QR Code'),
     ]
     
     RECORRENCIA_CHOICES = [
@@ -257,6 +258,14 @@ class Faturamento(models.Model):
     mes_referencia = models.DateField(
         verbose_name="Mês de Referência",
         help_text="Primeiro dia do mês de referência"
+    )
+    
+    FaturamentoLoja = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        default=Decimal('0.00'),  # ADICIONADO
+        validators=[MinValueValidator(Decimal('0.01'))],
+        verbose_name="Valor do Faturamento Loja"
     )
 
     FaturamentoModoBank_PIX = models.DecimalField(
