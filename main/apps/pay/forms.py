@@ -120,21 +120,127 @@ class ContaPagarForm(forms.ModelForm):
         self.grouped_fields = groups
 
 
-class FaturamentoForm(forms.ModelForm):
-    FIELD_GROUPS = {
-        'Informações Básicas': ['descricao', 'tipo', 'valor', 'data'],
-        'Detalhes': ['conta', 'observacao', 'comprovante'],
-    }
 
+
+class FaturamentoForm(forms.ModelForm):
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Força o valor da data no formato correto
+        if self.instance and self.instance.pk and self.instance.mes_referencia:
+            self.initial['mes_referencia'] = self.instance.mes_referencia.strftime('%Y-%m-%d')
+    
+    # Sobrescrever os campos para garantir formatação consistente
+    FaturamentoModoBank_PIX = forms.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        required=False,
+        localize=False,  # Importante: desabilita formatação com vírgula
+        widget=forms.NumberInput(attrs={
+            'class': 'form-control',
+            'step': '0.01',
+            'min': '0.01'
+        })
+    )
+    
+    FaturamentoModoBank_Cartao = forms.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        required=False,
+        localize=False,
+        widget=forms.NumberInput(attrs={
+            'class': 'form-control',
+            'step': '0.01',
+            'min': '0.01'
+        })
+    )
+    
+    FaturamentoEfiBank_Boleto = forms.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        required=False,
+        localize=False,
+        widget=forms.NumberInput(attrs={
+            'class': 'form-control',
+            'step': '0.01',
+            'min': '0.01'
+        })
+    )
+    
+    FaturamentoCelcoin_Cartao = forms.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        required=False,
+        localize=False,
+        widget=forms.NumberInput(attrs={
+            'class': 'form-control',
+            'step': '0.01',
+            'min': '0.01'
+        })
+    )
+    
+    FaturamentoMaquinaCartao = forms.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        required=False,
+        localize=False,
+        widget=forms.NumberInput(attrs={
+            'class': 'form-control',
+            'step': '0.01',
+            'min': '0.01'
+        })
+    )
+    
+    valor = forms.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        required=True,
+        localize=False,
+        widget=forms.NumberInput(attrs={
+            'class': 'form-control',
+            'step': '0.01',
+            'min': '0.01',
+            'readonly': 'readonly'
+        })
+    )
+    
+    mes_referencia = forms.DateField(
+        localize=False,
+        widget=forms.DateInput(
+            attrs={
+                'class': 'form-control',
+                'type': 'date'
+            },
+            format='%Y-%m-%d'
+        ),
+        input_formats=['%Y-%m-%d', '%d/%m/%Y']
+    )
+    
     class Meta:
         model = Faturamento
-        fields = '__all__'
+        fields = [
+            'mes_referencia',
+            'FaturamentoModoBank_PIX',
+            'FaturamentoModoBank_Cartao',
+            'FaturamentoEfiBank_Boleto',
+            'FaturamentoCelcoin_Cartao',
+            'FaturamentoMaquinaCartao',
+            'valor',
+            'observacao'
+        ]
         widgets = {
-            'descricao': forms.TextInput(attrs={'class': 'form-control'}),
-            'tipo': forms.Select(attrs={'class': 'form-select'}),
-            'valor': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
-            'data': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
-            'conta': forms.Select(attrs={'class': 'form-select'}),
-            'observacao': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
-            'comprovante': forms.FileInput(attrs={'class': 'form-control'}),
+            'observacao': forms.Textarea(attrs={
+                'class': 'form-control',
+                'rows': 3
+            }),
+        }
+        labels = {
+            'mes_referencia': 'Mês de Referência',
+            'FaturamentoModoBank_PIX': 'Valor do Pagamento em Loja',
+            'FaturamentoModoBank_Cartao': 'Valor do ModoBank Cartão',
+            'FaturamentoEfiBank_Boleto': 'Valor do EfiBank Boleto',
+            'FaturamentoCelcoin_Cartao': 'Valor do Faturamento Celcoin Cartão',
+            'FaturamentoMaquinaCartao': 'Valor do Faturamento Maquina Cartão',
+            'valor': 'Faturamento Bruto Total',
+            'observacao': 'Observação',
         }

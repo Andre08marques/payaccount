@@ -1,5 +1,5 @@
-from django.shortcuts import render
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+from django.shortcuts import render, redirect, get_object_or_404
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView, View
 from django.urls import reverse_lazy
 from django.contrib import messages
 from django.db.models import Q, CharField, TextField, Sum, Count
@@ -173,25 +173,47 @@ class FaturamentoListView(ListView):
 
 class FaturamentoCreateView(CreateView):
     model = Faturamento
+    form_class = FaturamentoForm
     template_name = 'faturamento/faturamento_form.html'
-    fields = ['mes_referencia', 'valor', 'observacao']
     success_url = reverse_lazy('faturamento_list')
 
     def form_valid(self, form):
-        messages.success(self.request, 'Faturamento registrado com sucesso!')
+        messages.success(self.request, 'Faturamento criado com sucesso!')
         return super().form_valid(form)
 
-class FaturamentoUpdateView(UpdateView):
-    model = Faturamento
-    template_name = 'faturamento/faturamento_form.html'
-    fields = ['mes_referencia', 'valor', 'observacao']
-    success_url = reverse_lazy('faturamento_list')
 
-    def form_valid(self, form):
-        messages.success(self.request, 'Faturamento atualizado com sucesso!')
-        return super().form_valid(form)
-
+class FaturamentoUpdateView(View):
+    def get(self, request, pk):
+        faturamento = get_object_or_404(Faturamento, pk=pk)
+        form = FaturamentoForm(instance=faturamento)
+        
+        # DEBUG
+        print(f"DEBUG GET: Faturamento ID: {faturamento.pk}")
+        print(f"DEBUG GET: PIX: {faturamento.FaturamentoModoBank_PIX}")
+        print(f"DEBUG GET: Valor: {faturamento.valor}")
+        
+        context = {
+            'form': form,
+            'object': faturamento  # Importante!
+        }
+        return render(request, 'faturamento/faturamento_form.html', context)
+    
+    def post(self, request, pk):
+        faturamento = get_object_or_404(Faturamento, pk=pk)
+        form = FaturamentoForm(request.POST, instance=faturamento)
+        
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Faturamento atualizado com sucesso!')
+            return redirect('faturamento_list')
+        
+        context = {
+            'form': form,
+            'object': faturamento
+        }
+        return render(request, 'faturamento/faturamento_form.html', context)
 class FaturamentoDeleteView(DeleteView):
     model = Faturamento
     template_name = 'faturamento/faturamento_confirm_delete.html'
     success_url = reverse_lazy('faturamento_list')
+

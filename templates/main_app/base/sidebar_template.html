@@ -28,47 +28,39 @@
                     </a>
                 </li>
 
-                <li class="nav-item has-treeview {% if request.resolver_match.url_name == 'listunidade' %} active {% endif %}">
-                    <a href="#" class="nav-link">
-                        <i class="nav-icon ffas fa-dollar-sign"></i>
+                <li class="nav-item">
+                    <!-- {% url 'conta_list' as conta_list %} -->
+                    <a href="{% url 'conta_list' %}" class="nav-link {% if request.resolver_match.url_name == 'conta_list' %} active {% endif %}">
+                        <i class="nav-icon fas fa-dollar-sign"></i>
                         <p>
-                            Contas
-                            <i class="fas fa-angle-left right"></i>
+                            Contas a Pagar
+
                         </p>
                     </a>
-
-                    <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <a href="{% url 'conta_list' %}"
-                               class="nav-link {% if request.resolver_match.url_name == 'listunidade' %} active {% endif %}">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Cadastrar contas</p>
-                            </a>
-                        </li>
-                    </ul>
-                
-                    <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <a href="{% url 'grupoconta_list' %}"
-                               class="nav-link {% if request.resolver_match.url_name == 'listunidade' %} active {% endif %}">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Cadastrar Grupo de contas</p>
-                            </a>
-                        </li>
-                    
-                    </ul>
-
-                    <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <a href="{% url 'faturamento_list' %}"
-                               class="nav-link {% if request.resolver_match.url_name == 'faturamento_list' %} active {% endif %}">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Cadastrar Faturamento</p>
-                            </a>
-                        </li>
-                    </ul>
-                    
                 </li>
+
+                <li class="nav-item">
+                    <!-- {% url 'grupoconta_list' as grupoconta_list %} -->
+                    <a href="{% url 'grupoconta_list' %}" class="nav-link {% if request.resolver_match.url_name == 'grupoconta_list' %} active {% endif %}">
+                        <i class="nav-icon fas fa-dollar-sign"></i>
+                        <p>
+                            Cadastrar Grupo de contas
+
+                        </p>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <!-- {% url 'faturamento_list' as faturamento_list %} -->
+                    <a href="{% url 'faturamento_list' %}" class="nav-link {% if request.resolver_match.url_name == 'faturamento_list' %} active {% endif %}">
+                        <i class="nav-icon fas fa-dollar-sign"></i>
+                        <p>
+                            Cadastrar Faturamento
+
+                        </p>
+                    </a>
+                </li>
+
 
                 <li class="nav-item">
                     <form method="post" action="{% url 'logout' %}" style="display: inline;">

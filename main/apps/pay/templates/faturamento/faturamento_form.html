@@ -5,7 +5,7 @@
 {% block content %}
 <div class="container-fluid py-4">
     <div class="row justify-content-center">
-        <div class="col-md-8">
+        <div class="col-md-12">
             <div class="card shadow-sm border-0">
                 <div class="card-header bg-white d-flex justify-content-between align-items-center">
                     <h5 class="mb-0">
@@ -22,33 +22,82 @@
                         
                         <div class="mb-3">
                             <label for="{{ form.mes_referencia.id_for_label }}" class="form-label">Mês de Referência *</label>
-                            <input type="date" name="mes_referencia" 
-                                   class="form-control {% if form.mes_referencia.errors %}is-invalid{% endif %}"
-                                   value="{{ form.mes_referencia.value|date:'Y-m-d'|default:'' }}"
-                                   required>
+                            {{ form.mes_referencia }}
                             {% if form.mes_referencia.errors %}
-                                <div class="invalid-feedback">{{ form.mes_referencia.errors }}</div>
+                                <div class="invalid-feedback d-block">{{ form.mes_referencia.errors }}</div>
                             {% endif %}
                             <div class="form-text">Selecione o primeiro dia do mês de referência</div>
                         </div>
 
                         <div class="mb-3">
-                            <label for="{{ form.valor.id_for_label }}" class="form-label">Valor do Faturamento *</label>
+                            <label for="{{ form.FaturamentoModoBank_PIX.id_for_label }}" class="form-label">Valor do Pagamento em Loja</label>
                             <div class="input-group">
                                 <span class="input-group-text">R$</span>
-                                <input type="number" name="valor" 
-                                       class="form-control {% if form.valor.errors %}is-invalid{% endif %}"
-                                       value="{{ form.valor.value|default:'' }}"
-                                       step="0.01" min="0.01" required>
+                                {{ form.FaturamentoModoBank_PIX }}
+                            </div>
+                            {% if form.FaturamentoModoBank_PIX.errors %}
+                                <div class="invalid-feedback d-block">{{ form.FaturamentoModoBank_PIX.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="{{ form.FaturamentoModoBank_Cartao.id_for_label }}" class="form-label">Valor do ModoBank Cartão</label>
+                            <div class="input-group">
+                                <span class="input-group-text">R$</span>
+                                {{ form.FaturamentoModoBank_Cartao }}
+                            </div>
+                            {% if form.FaturamentoModoBank_Cartao.errors %}
+                                <div class="invalid-feedback d-block">{{ form.FaturamentoModoBank_Cartao.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="{{ form.FaturamentoEfiBank_Boleto.id_for_label }}" class="form-label">Valor do EfiBank Boleto</label>
+                            <div class="input-group">
+                                <span class="input-group-text">R$</span>
+                                {{ form.FaturamentoEfiBank_Boleto }}
+                            </div>
+                            {% if form.FaturamentoEfiBank_Boleto.errors %}
+                                <div class="invalid-feedback d-block">{{ form.FaturamentoEfiBank_Boleto.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="{{ form.FaturamentoCelcoin_Cartao.id_for_label }}" class="form-label">Valor do Faturamento Celcoin Cartão</label>
+                            <div class="input-group">
+                                <span class="input-group-text">R$</span>
+                                {{ form.FaturamentoCelcoin_Cartao }}
+                            </div>
+                            {% if form.FaturamentoCelcoin_Cartao.errors %}
+                                <div class="invalid-feedback d-block">{{ form.FaturamentoCelcoin_Cartao.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="{{ form.FaturamentoMaquinaCartao.id_for_label }}" class="form-label">Valor do Faturamento Maquina Cartão</label>
+                            <div class="input-group">
+                                <span class="input-group-text">R$</span>
+                                {{ form.FaturamentoMaquinaCartao }}
+                            </div>
+                            {% if form.FaturamentoMaquinaCartao.errors %}
+                                <div class="invalid-feedback d-block">{{ form.FaturamentoMaquinaCartao.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="{{ form.valor.id_for_label }}" class="form-label">Faturamento Bruto Total*</label>
+                            <div class="input-group">
+                                <span class="input-group-text">R$</span>
+                                {{ form.valor }}
                             </div>
                             {% if form.valor.errors %}
-                                <div class="invalid-feedback">{{ form.valor.errors }}</div>
+                                <div class="invalid-feedback d-block">{{ form.valor.errors }}</div>
                             {% endif %}
                         </div>
 
                         <div class="mb-3">
                             <label for="{{ form.observacao.id_for_label }}" class="form-label">Observação</label>
-                            <textarea name="observacao" class="form-control" rows="3">{{ form.observacao.value|default:'' }}</textarea>
+                            {{ form.observacao }}
                         </div>
 
                         <div class="d-flex justify-content-end">
@@ -62,4 +111,54 @@
         </div>
     </div>
 </div>
+
+<script>
+// Script para calcular automaticamente o Faturamento Bruto Total
+document.addEventListener('DOMContentLoaded', function() {
+    // Seleciona todos os campos de valor
+    const camposPagamento = [
+        'FaturamentoModoBank_PIX',
+        'FaturamentoModoBank_Cartao',
+        'FaturamentoEfiBank_Boleto',
+        'FaturamentoCelcoin_Cartao',
+        'FaturamentoMaquinaCartao'
+    ];
+    
+    const campoTotal = document.querySelector('input[name="valor"]');
+    
+    // Função para calcular o total
+    function calcularTotal() {
+        let total = 0;
+        
+        camposPagamento.forEach(function(nomeCampo) {
+            const campo = document.querySelector(`input[name="${nomeCampo}"]`);
+            if (campo && campo.value) {
+                const valor = parseFloat(campo.value) || 0;
+                total += valor;
+            }
+        });
+        
+        // Atualiza o campo total com 2 casas decimais
+        campoTotal.value = total.toFixed(2);
+    }
+    
+    // Adiciona event listeners para todos os campos de pagamento
+    camposPagamento.forEach(function(nomeCampo) {
+        const campo = document.querySelector(`input[name="${nomeCampo}"]`);
+        if (campo) {
+            // Calcula ao digitar
+            campo.addEventListener('input', calcularTotal);
+            // Calcula ao sair do campo (blur)
+            campo.addEventListener('blur', calcularTotal);
+        }
+    });
+    
+    // Torna o campo total somente leitura (opcional)
+    campoTotal.setAttribute('readonly', 'readonly');
+    campoTotal.style.backgroundColor = '#e9ecef';
+    
+    // Calcula o total inicial se houver valores preenchidos (modo edição)
+    calcularTotal();
+});
+</script>
 {% endblock %}

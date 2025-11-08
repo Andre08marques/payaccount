@@ -34,7 +34,17 @@ class ContaPagar(models.Model):
     TIPO_PAGAMENTO_CHOICES = [
         ('transferencia', 'Transferência'),
         ('deposito', 'Depósito'),
-        ('pix', 'Pix'),
+        ('pix_cpf', 'Pix CPF'),
+        ('pix_cnpj', 'Pix CNPJ'),
+        ('pix_email', 'Pix E-mail'),
+        ('pix_telefone', 'Pix Telefone'),
+        ('pix_chave_aleatoria', 'Pix Chave Aleatória'),
+        ('especie', 'Espécie (Dinheiro)'),
+        ('boleto', 'Boleto Bancário'),
+        ('cartao_credito', 'Cartão de Crédito'),
+        ('cartao_debito', 'Cartão de Débito'),
+        ('debito_automatico', 'Débito Automático'),
+        ('link_pagamento', 'Link de Pagamento'),
     ]
     
     RECORRENCIA_CHOICES = [
@@ -62,14 +72,13 @@ class ContaPagar(models.Model):
     fixo_variado = models.CharField(
         max_length=10,
         choices=TIPO_CONTA_CHOICES,
-        default='variado',
         verbose_name="Fixo ou Variado"
     )
     
     recorrencia = models.CharField(
         max_length=20,
         choices=RECORRENCIA_CHOICES,
-        default='unica',
+
         verbose_name="Recorrência"
     )
     
@@ -108,7 +117,7 @@ class ContaPagar(models.Model):
     )
     
     numero_conta_pix = models.CharField(
-        max_length=100,
+        max_length=300,
         verbose_name="Número da Conta ou Pix",
         blank=True
     )
@@ -162,11 +171,12 @@ class ContaPagar(models.Model):
         verbose_name="IPVA/IPVA + Multa"
     )
     
-    # Dados de acesso e confirmação
-    link_acesso_pagamento = models.URLField(
-        max_length=500,
-        verbose_name="Link de Acesso para Pagar a Conta",
-        blank=True
+    video_tutorial = models.FileField(
+        upload_to='tutoriais/%Y/%m/',
+        verbose_name="Vídeo Tutorial",
+        blank=True,
+        null=True,
+        help_text="Faça upload de um vídeo tutorial (MP4, AVI, MOV - máx 100MB)"
     )
     
     usuario = models.CharField(
@@ -189,9 +199,9 @@ class ContaPagar(models.Model):
         help_text="Formato: (00) 00000-0000"
     )
     
-    link_passo_passo = models.URLField(
+    link_acesso_pagamento = models.URLField(
         max_length=500,
-        verbose_name="Link Passo-a-Passo",
+        verbose_name="Link de Acesso ao Pagamento",
         blank=True
     )
     
@@ -248,12 +258,52 @@ class Faturamento(models.Model):
         verbose_name="Mês de Referência",
         help_text="Primeiro dia do mês de referência"
     )
-    
+
+    FaturamentoModoBank_PIX = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        default=Decimal('0.00'),  # ADICIONADO
+        validators=[MinValueValidator(Decimal('0.01'))],
+        verbose_name="Valor do Faturamento ModoBank PIX"
+    )
+
+    FaturamentoModoBank_Cartao = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        default=Decimal('0.00'),  # ADICIONADO
+        validators=[MinValueValidator(Decimal('0.01'))],
+        verbose_name="Valor do Faturamento ModoBank Cartão"
+    )
+
+    FaturamentoEfiBank_Boleto = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        default=Decimal('0.00'),  # ADICIONADO
+        validators=[MinValueValidator(Decimal('0.01'))],
+        verbose_name="Valor do Faturamento EfiBank Boleto"
+    )
+
+    FaturamentoCelcoin_Cartao = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        default=Decimal('0.00'),  # ADICIONADO
+        validators=[MinValueValidator(Decimal('0.01'))],
+        verbose_name="Valor do Faturamento Celcoin Cartão"
+    )
+
+    FaturamentoMaquinaCartao = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        default=Decimal('0.00'),  # ADICIONADO
+        validators=[MinValueValidator(Decimal('0.01'))],
+        verbose_name="Valor do Faturamento Maquina Cartão"
+    )
+
     valor = models.DecimalField(
         max_digits=10,
         decimal_places=2,
         validators=[MinValueValidator(Decimal('0.01'))],
-        verbose_name="Valor do Faturamento"
+        verbose_name="Valor do Faturamento Bruto Total"
     )
     
     observacao = models.TextField(
