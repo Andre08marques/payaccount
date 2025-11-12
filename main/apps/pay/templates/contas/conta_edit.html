@@ -45,152 +45,147 @@
                     <form method="post" class="needs-validation" novalidate>
                         {% csrf_token %}
                         
-                         <!-- Informações Básicas -->
-                        <div class="section-header mb-3">
-                            <h6 class="text-primary mb-0">
-                                <i class="fas fa-info-circle me-2"></i>Informações Básicas
-                            </h6>
-                        </div>
-                        <div class="row g-3 mb-4">
-                            <div class="col-md-12">
-                                <label for="{{ form.nome_conta.id_for_label }}" class="form-label">{{ form.nome_conta.label }}*</label>
-                                {{ form.nome_conta }}
-                                {% if form.nome_conta.errors %}
-                                    <div class="invalid-feedback d-block">{{ form.nome_conta.errors }}</div>
-                                {% endif %}
-                            </div>
-                            <div class="col-md-12">
-                                <label for="{{ form.grupo_conta.id_for_label }}" class="form-label">{{ form.grupo_conta.label }}*</label>
-                                {{ form.grupo_conta }}
-                            </div>
-                            <div class="col-md-12">
-                                <label for="{{ form.fixo_variado.id_for_label }}" class="form-label">{{ form.fixo_variado.label }}</label>
-                                {{ form.fixo_variado }}
-                            </div>
-                            <div class="col-md-12">
-                                <label for="{{ form.recorrencia.id_for_label }}" class="form-label">{{ form.recorrencia.label }}</label>
-                                {{ form.recorrencia }}
-                            </div>
-                        </div>
-
-                        <!-- Dados Financeiros -->
-                        <div class="section-header mb-3">
-                            <h6 class="text-primary mb-0">
-                                <i class="fas fa-dollar-sign me-2"></i>Dados Financeiros
-                            </h6>
-                        </div>
-                        <div class="row g-3 mb-4">
-                            <div class="col-md-12">
-                                <label for="{{ form.nome_razao.id_for_label }}" class="form-label">{{ form.nome_razao.label }}</label>
-                                {{ form.nome_razao }}
-                            </div>
-                            <div class="col-md-12">
-                                <label for="{{ form.cpf_cnpj.id_for_label }}" class="form-label">{{ form.cpf_cnpj.label }}</label>
-                                {{ form.cpf_cnpj }}
-                                <div class="form-text small">{{ form.cpf_cnpj.help_text }}</div>
-                            </div>
-                            <div class="col-md-12">
-                                <label for="{{ form.tipo_pagamento.id_for_label }}" class="form-label">{{ form.tipo_pagamento.label }}</label>
-                                {{ form.tipo_pagamento }}
-                            </div>
-                            <div class="col-md-12">
-                                <label for="{{ form.numero_conta_pix.id_for_label }}" class="form-label">{{ form.numero_conta_pix.label }}</label>
-                                {{ form.numero_conta_pix }}
-                            </div>
-                            <div class="col-md-12">
-                                <label for="{{ form.agencia.id_for_label }}" class="form-label">{{ form.agencia.label }}</label>
-                                {{ form.agencia }}
-                            </div>
-                            <div class="col-md-12">
-                                <label for="{{ form.conta_corrente_poupanca.id_for_label }}" class="form-label">{{ form.conta_corrente_poupanca.label }}</label>
-                                {{ form.conta_corrente_poupanca }}
-                            </div>
-                            <div class="col-md-12">
-                                <label for="{{ form.banco_origem.id_for_label }}" class="form-label">{{ form.banco_origem.label }}</label>
-                                {{ form.banco_origem }}
-                            </div>
-                            <div class="col-md-12">
-                                <label for="{{ form.valor.id_for_label }}" class="form-label">{{ form.valor.label }}*</label>
-                                {{ form.valor }}
-                            </div>
-                            <div class="col-md-12">
-                                <label for="{{ form.data_vencimento.id_for_label }}" class="form-label">{{ form.data_vencimento.label }}*</label>
-                                {{ form.data_vencimento }}
-                            </div>
-                            <div class="col-md-12">
-                                <label for="{{ form.data_pagamento.id_for_label }}" class="form-label">{{ form.data_pagamento.label }}</label>
-                                {{ form.data_pagamento }}
-                            </div>
-                        </div>
-
-                        <!-- Dados de Acesso -->
-                        <div class="section-header mb-3">
-                            <h6 class="text-primary mb-0">
-                                <i class="fas fa-key me-2"></i>Dados de Acesso
-                            </h6>
-                        </div>
-                        <div class="row g-3 mb-4">
-                            <div class="col-md-12">
-                                <label for="{{ form.link_acesso_pagamento.id_for_label }}" class="form-label">{{ form.link_acesso_pagamento.label }}</label>
-                                {{ form.link_acesso_pagamento }}
-                            </div>
-                            <div class="col-md-12">
-                                <label for="{{ form.usuario.id_for_label }}" class="form-label">{{ form.usuario.label }}</label>
-                                {{ form.usuario }}
-                            </div>
-                            <div class="col-md-12">
-                                <label for="{{ form.senha.id_for_label }}" class="form-label">{{ form.senha.label }}</label>
-                                {{ form.senha }}
-                                <div class="form-text small">{{ form.senha.help_text }}</div>
-                            </div>
-                            <div class="col-md-12">
-                                <label for="{{ form.whatsapp_confirmacao.id_for_label }}" class="form-label">{{ form.whatsapp_confirmacao.label }}</label>
-                                {{ form.whatsapp_confirmacao }}
-                                <div class="form-text small">{{ form.whatsapp_confirmacao.help_text }}</div>
-                            </div>
-                            <div class="col-md-12">
-                                <label for="{{ form.video_tutorial.id_for_label }}" class="form-label">{{ form.video_tutorial.label }}</label>
-                                {{ form.video_tutorial }}
-                            </div>
-                            <div class="col-md-12">
-                                <label for="{{ form.descricao_observacao.id_for_label }}" class="form-label">{{ form.descricao_observacao.label }}</label>
-                                {{ form.descricao_observacao }}
-                            </div>
-                        </div>
-
-                        <!-- Veículo -->
-                        <div class="section-header mb-3">
-                            <h6 class="text-primary mb-0">
-                                <i class="fas fa-car me-2"></i>Veículo
-                            </h6>
-                        </div>
-                        <div class="row g-3 mb-4">
-                            <div class="col-md-12">
-                                <label for="{{ form.modelo.id_for_label }}" class="form-label">{{ form.modelo.label }}</label>
-                                {{ form.modelo }}
-                            </div>
-                            <div class="col-md-12">
-                                <label for="{{ form.placa.id_for_label }}" class="form-label">{{ form.placa.label }}</label>
-                                {{ form.placa }}
-                            </div>
-                            <div class="col-md-12">
-                                <label for="{{ form.renavam.id_for_label }}" class="form-label">{{ form.renavam.label }}</label>
-                                {{ form.renavam }}
-                            </div>
-                            <div class="col-md-12">
-                                <label for="{{ form.ano_fabricacao.id_for_label }}" class="form-label">{{ form.ano_fabricacao.label }}</label>
-                                {{ form.ano_fabricacao }}
-                            </div>
-                            <div class="col-12 mt-3">
-                                <div class="form-check">
-                                    <input type="checkbox" class="form-check-input" id="{{ form.ipva_multa.id_for_label }}" name="{{ form.ipva_multa.html_name }}" {% if form.ipva_multa.value %}checked{% endif %}>
-                                    <label class="form-check-label" for="{{ form.ipva_multa.id_for_label }}">
-                                        {{ form.ipva_multa.label }}
-                                    </label>
+                        <div class="row g-2">
+                            <!-- COLUNA 1 -->
+                            <div class="col-md-2">
+                                <!-- Informações Básicas -->
+                                <div class="section-spacing">
+                                    <div class="mb-3">
+                                        <label for="{{ form.nome_conta.id_for_label }}" class="form-label">{{ form.nome_conta.label }}*</label>
+                                        {{ form.nome_conta }}
+                                        {% if form.nome_conta.errors %}
+                                            <div class="invalid-feedback d-block">{{ form.nome_conta.errors }}</div>
+                                        {% endif %}
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="{{ form.grupo_conta.id_for_label }}" class="form-label">{{ form.grupo_conta.label }}*</label>
+                                        {{ form.grupo_conta }}
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="{{ form.fixo_variado.id_for_label }}" class="form-label">{{ form.fixo_variado.label }}</label>
+                                        {{ form.fixo_variado }}
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="{{ form.recorrencia.id_for_label }}" class="form-label">{{ form.recorrencia.label }}</label>
+                                        {{ form.recorrencia }}
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="{{ form.data_vencimento.id_for_label }}" class="form-label">{{ form.data_vencimento.label }}*</label>
+                                        {{ form.data_vencimento }}
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="{{ form.data_pagamento.id_for_label }}" class="form-label">{{ form.data_pagamento.label }}</label>
+                                        {{ form.data_pagamento }}
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="{{ form.valor.id_for_label }}" class="form-label">{{ form.valor.label }}*</label>
+                                        {{ form.valor }}
+                                    </div>
                                 </div>
                             </div>
-                            <div class="col-12">
-                                <div class="form-check">
+
+                            <!-- COLUNA 2 -->
+                            <div class="col-md-2">
+                                <!-- Dados Financeiros -->
+                                <div class="section-spacing">
+                                    <div class="mb-3">
+                                        <label for="{{ form.nome_razao.id_for_label }}" class="form-label">{{ form.nome_razao.label }}</label>
+                                        {{ form.nome_razao }}
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="{{ form.cpf_cnpj.id_for_label }}" class="form-label">{{ form.cpf_cnpj.label }}</label>
+                                        {{ form.cpf_cnpj }}
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="{{ form.tipo_pagamento.id_for_label }}" class="form-label">{{ form.tipo_pagamento.label }}</label>
+                                        {{ form.tipo_pagamento }}
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label for="{{ form.nome_pix.id_for_label }}" class="form-label">{{ form.nome_pix.label }}</label>
+                                        {{ form.nome_pix }}
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="{{ form.numero_conta_pix.id_for_label }}" class="form-label">{{ form.numero_conta_pix.label }}</label>
+                                        {{ form.numero_conta_pix }}
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="{{ form.agencia.id_for_label }}" class="form-label">{{ form.agencia.label }}</label>
+                                        {{ form.agencia }}
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="{{ form.conta_corrente_poupanca.id_for_label }}" class="form-label">{{ form.conta_corrente_poupanca.label }}</label>
+                                        {{ form.conta_corrente_poupanca }}
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="{{ form.banco_origem.id_for_label }}" class="form-label">{{ form.banco_origem.label }}</label>
+                                        {{ form.banco_origem }}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- COLUNA 3 -->
+                            <div class="col-md-2">
+                                <!-- Veículo -->
+                                <div class="section-spacing">
+                                    <div class="mb-3">
+                                        <label for="{{ form.modelo.id_for_label }}" class="form-label">{{ form.modelo.label }}</label>
+                                        {{ form.modelo }}
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="{{ form.placa.id_for_label }}" class="form-label">{{ form.placa.label }}</label>
+                                        {{ form.placa }}
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="{{ form.renavam.id_for_label }}" class="form-label">{{ form.renavam.label }}</label>
+                                        {{ form.renavam }}
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="{{ form.ano_fabricacao.id_for_label }}" class="form-label">{{ form.ano_fabricacao.label }}</label>
+                                        {{ form.ano_fabricacao }}
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="{{ form.ipva_multa.id_for_label }}" class="form-label">{{ form.ipva_multa.label }}</label>
+                                        {{ form.ipva_multa }}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- COLUNA 4 -->
+                            <div class="col-md-3">
+                                <!-- Dados de Acesso -->
+                                <div class="section-spacing">
+                                    <div class="mb-3">
+                                        <label for="{{ form.link_acesso_pagamento.id_for_label }}" class="form-label">{{ form.link_acesso_pagamento.label }}</label>
+                                        {{ form.link_acesso_pagamento }}
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="{{ form.usuario.id_for_label }}" class="form-label">{{ form.usuario.label }}</label>
+                                        {{ form.usuario }}
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="{{ form.senha.id_for_label }}" class="form-label">{{ form.senha.label }}</label>
+                                        {{ form.senha }}
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="{{ form.whatsapp_confirmacao.id_for_label }}" class="form-label">{{ form.whatsapp_confirmacao.label }}</label>
+                                        {{ form.whatsapp_confirmacao }}
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="{{ form.video_tutorial.id_for_label }}" class="form-label">Link passo-a-passo</label>
+                                        {{ form.video_tutorial }}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- COLUNA 5 - Descrição e campos finais -->
+                            <div class="col-md-3">
+                                <div class="mb-3">
+                                    <label for="{{ form.descricao_observacao.id_for_label }}" class="form-label">{{ form.descricao_observacao.label }}</label>
+                                    {{ form.descricao_observacao }}
+                                </div>
+                                
+                                <div class="form-check mb-2">
                                     <input type="checkbox" class="form-check-input" id="{{ form.pago.id_for_label }}" name="{{ form.pago.html_name }}" {% if form.pago.value %}checked{% endif %}>
                                     <label class="form-check-label" for="{{ form.pago.id_for_label }}">
                                         {{ form.pago.label }}
@@ -200,9 +195,9 @@
                         </div>
 
                         <!-- Botões de ação -->
-                        <div class="d-flex justify-content-end mt-4 pt-3 border-top">
+                        <div class="d-flex justify-content-start mt-3 pt-3 border-top">
                             <button type="submit" class="btn btn-primary btn-rounded px-4">
-                                <i class="fas fa-save me-2"></i>Salvar Alterações
+                                <i class="fas fa-save me-2"></i>Salvar
                             </button>
                         </div>
                     </form>

@@ -55,6 +55,11 @@ class ContaPagar(models.Model):
         ('semestral', 'Semestral'),
         ('anual', 'Anual'),
     ]
+
+    ipva_multa_choices = [
+        ('sim', 'Sim'),
+        ('nao', 'Não'),
+    ]
     
     # Informações básicas
     nome_conta = models.CharField(
@@ -117,6 +122,12 @@ class ContaPagar(models.Model):
         blank=True
     )
     
+    nome_pix = models.CharField(
+        max_length=300,
+        verbose_name="Nome do pix",
+        blank=True
+    )
+
     numero_conta_pix = models.CharField(
         max_length=300,
         verbose_name="Número da Conta ou Pix",
@@ -167,8 +178,11 @@ class ContaPagar(models.Model):
         null=True
     )
     
-    ipva_multa = models.BooleanField(
-        default=False,
+    ipva_multa = models.CharField(
+        max_length=10,
+        default="False",
+        null=True,
+        choices=ipva_multa_choices,
         verbose_name="IPVA/IPVA + Multa"
     )
     
