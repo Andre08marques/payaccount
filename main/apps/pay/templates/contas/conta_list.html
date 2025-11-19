@@ -83,33 +83,14 @@
                     <label class="form-label">Status da Conta</label>
                     <select name="status" class="form-select">
                         <option value="">Todos</option>
-                        <option value="em_dia" {% if request.GET.status == 'em_dia' %}selected{% endif %}>Em dia</option>
-                        <option value="atrasada" {% if request.GET.status == 'atrasada' %}selected{% endif %}>Em atraso</option>
-                        <option value="hoje" {% if request.GET.status == 'hoje' %}selected{% endif %}>Vence hoje</option>
+                        <option value="em_dia" {% if request.GET.status == 'em_dia' %}selected{% endif %}>🟢Em Dia</option>
+                        <option value="proximo_vencer" {% if request.GET.status == 'proximo_vencer' %}selected{% endif %}>🟡Próximo a Vencer</option>
+                        <option value="hoje" {% if request.GET.status == 'hoje' %}selected{% endif %}>🟠Vence Hoje</option>
+                        <option value="atrasada" {% if request.GET.status == 'atrasada' %}selected{% endif %}>🔴Em Atraso</option>
                     </select>
                 </div>
-                <div class="col-md">
-                    <label class="form-label">Recorrência</label>
-                    <select name="recorrencia" class="form-select">
-                        <option value="">Todas</option>
-                        {% for value, label in form.recorrencia.field.choices %}
-                            <option value="{{ value }}" {% if request.GET.recorrencia == value %}selected{% endif %}>
-                                {{ label }}
-                            </option>
-                        {% endfor %}
-                    </select>
-                </div>
-                <div class="col-md">
-                    <label class="form-label">Tipo</label>
-                    <select name="tipo" class="form-select">
-                        <option value="">Todos</option>
-                        {% for value, label in form.fixo_variado.field.choices %}
-                            <option value="{{ value }}" {% if request.GET.tipo == value %}selected{% endif %}>
-                                {{ label }}
-                            </option>
-                        {% endfor %}
-                    </select>
-                </div>
+                
+
                 <div class="col-md align-self-end">
                     <button type="submit" class="btn btn-primary w-100">
                         <i class="fas fa-search"></i> Buscar
@@ -127,8 +108,8 @@
                             <th>Grupo de Conta</th>
                             <th>Status</th>
                             <th>Recorrência</th>
-                            <th>Fixo/Variado</th>
-                            <th>Data Vencimento</th>
+                            <th>Valor Fixo ou Variado</th>
+                            <th>Data de Vencimento</th>
                             <th class="text-end">Valor</th>
                             <th class="text-center">Ações</th>
                         </tr>
@@ -142,6 +123,8 @@
                             <td>
                                 {% if conta.pago %}
                                     <span class="badge bg-secondary">Pago</span>
+                                {% elif conta.status == 'prox_vencer' %}
+                                    <span style="background: #FFDA00;">Próximo a Vencer</span>
                                 {% elif conta.is_vencida %}
                                     <span class="badge bg-danger">Em Atraso</span>
                                 {% elif conta.data_vencimento == hoje %}
@@ -155,6 +138,13 @@
                             <td>{{ conta.data_vencimento|date:"d/m/Y" }}</td>
                             <td class="text-end">R$ {{ conta.valor }}</td>
                             <td class="text-center">
+                            {% if not conta.pago %}
+                                <a onclick="return confirm('Tem certeza que deseja pagar esta conta?')"  href="{% url 'conta_pagar' conta.pk %}" class="btn btn-sm btn-outline-primary">
+                                    Pagar
+                                    
+                                </a>
+                                
+                            {% endif %}
                                 <a href="{% url 'conta_update' conta.pk %}" class="btn btn-sm btn-outline-primary">
                                     <i class="fas fa-edit"></i>
                                 </a>
@@ -174,6 +164,17 @@
                         </tr>
                         {% endfor %}
                     </tbody>
+                    <tfoot class="table-light border-top border-2">
+                        <tr class="fw-bold">
+                            <td colspan="7" class="text-end py-3">
+                                <i class="fas fa-calculator me-2"></i>Total exibido ({{ total_registros }} contas):
+                            </td>
+                            <td class="text-end py-3">
+                                <span class="text-primary fs-5">R$ {{ total_contas|floatformat:2 }}</span>
+                            </td>
+                            <td></td>
+                        </tr>
+                    </tfoot>
                 </table>
             </div>
 

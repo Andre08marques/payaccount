@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Faturamento
+from .models import Faturamento, GrupoConta, ContaPagar
 
 # Register your models here.
 
@@ -9,3 +9,5 @@ class FaturamentoAdmin(admin.ModelAdmin):
     list_filter = ['mes_referencia']
     search_fields = ['observacao']
     date_hierarchy = 'mes_referencia'
+
+admin.site.register(ContaPagar)

@@ -1,3 +1,6 @@
+from django.conf.urls.static import static
+from django.conf import settings
+
 from django.urls import path
 from .views import (
     GrupoContaListView,
@@ -11,7 +14,8 @@ from .views import (
     FaturamentoListView, 
     FaturamentoCreateView, 
     FaturamentoUpdateView, 
-    FaturamentoDeleteView
+    FaturamentoDeleteView,
+    ContaPagoView
 )
 
 urlpatterns = [
@@ -22,9 +26,11 @@ urlpatterns = [
     path('contas/',                       ContaPagarListView.as_view(),   name='conta_list'),
     path('contas/novo/',                  ContaPagarCreateView.as_view(), name='conta_create'),
     path('contas/<int:pk>/editar/',       ContaPagarUpdateView.as_view(), name='conta_update'),
+    path('contas/<int:pk>/pagar/',        ContaPagoView.as_view(), name='conta_pagar'),
     path('contas/<int:pk>/excluir/',      ContaPagarDeleteView.as_view(), name='conta_delete'),
     path('faturamento/',                 FaturamentoListView.as_view(), name='faturamento_list'),
     path('faturamento/novo/',            FaturamentoCreateView.as_view(), name='faturamento_create'),
     path('faturamento/<int:pk>/editar/', FaturamentoUpdateView.as_view(), name='faturamento_update'),
     path('faturamento/<int:pk>/excluir/', FaturamentoDeleteView.as_view(), name='faturamento_delete'),
+
 ]

@@ -3,6 +3,7 @@
 {% block title %}Editar Conta{% endblock %}
 
 {% block custom_css %}
+    <script src="https://cdn.jsdelivr.net/npm/autonumeric@4.8.1/dist/autoNumeric.min.js"></script>
     <style>
         /* 🔹 Reduz o espaço entre os campos dentro das rows */
         .row.g-3 {
@@ -29,6 +30,7 @@
 {% endblock custom_css %}
 
 {% block content %}
+{% include "main_app/base/messages.html" %}
 <div class="container-fluid py-4">
     <div class="row">
         <div class="col-12">
@@ -49,6 +51,9 @@
                             <!-- COLUNA 1 -->
                             <div class="col-md-2">
                                 <!-- Informações Básicas -->
+                                 <div class="section-header">
+                                    <h6 class="text-primary"><i class="fas fa-info-circle me-2"></i>Informações Básicas</h6>
+                                </div>
                                 <div class="section-spacing">
                                     <div class="mb-3">
                                         <label for="{{ form.nome_conta.id_for_label }}" class="form-label">{{ form.nome_conta.label }}*</label>
@@ -73,10 +78,7 @@
                                         <label for="{{ form.data_vencimento.id_for_label }}" class="form-label">{{ form.data_vencimento.label }}*</label>
                                         {{ form.data_vencimento }}
                                     </div>
-                                    <div class="mb-3">
-                                        <label for="{{ form.data_pagamento.id_for_label }}" class="form-label">{{ form.data_pagamento.label }}</label>
-                                        {{ form.data_pagamento }}
-                                    </div>
+                                    
                                     <div class="mb-3">
                                         <label for="{{ form.valor.id_for_label }}" class="form-label">{{ form.valor.label }}*</label>
                                         {{ form.valor }}
@@ -87,6 +89,9 @@
                             <!-- COLUNA 2 -->
                             <div class="col-md-2">
                                 <!-- Dados Financeiros -->
+                                 <div class="section-header">
+                                    <h6 class="text-primary"><i class="fas fa-dollar-sign me-2"></i>Dados da Conta</h6>
+                                </div>
                                 <div class="section-spacing">
                                     <div class="mb-3">
                                         <label for="{{ form.nome_razao.id_for_label }}" class="form-label">{{ form.nome_razao.label }}</label>
@@ -127,6 +132,9 @@
                             <!-- COLUNA 3 -->
                             <div class="col-md-2">
                                 <!-- Veículo -->
+                                 <div class="section-header">
+                                    <h6 class="text-primary"><i class="fas fa-car me-2"></i>Veículo</h6>
+                                </div>
                                 <div class="section-spacing">
                                     <div class="mb-3">
                                         <label for="{{ form.modelo.id_for_label }}" class="form-label">{{ form.modelo.label }}</label>
@@ -154,10 +162,14 @@
                             <!-- COLUNA 4 -->
                             <div class="col-md-3">
                                 <!-- Dados de Acesso -->
+                                 <div class="section-header">
+                                    <h6 class="text-primary"><i class="fas fa-key me-2"></i>Dados de Acesso</h6>
+                                </div>
                                 <div class="section-spacing">
                                     <div class="mb-3">
                                         <label for="{{ form.link_acesso_pagamento.id_for_label }}" class="form-label">{{ form.link_acesso_pagamento.label }}</label>
                                         {{ form.link_acesso_pagamento }}
+                                        <a href="{{ form.instance.link_acesso_pagamento }}" target="_blank" class="text-decoration-none">{{ form.link_acesso_pagamento.label }}</a>
                                     </div>
                                     <div class="mb-3">
                                         <label for="{{ form.usuario.id_for_label }}" class="form-label">{{ form.usuario.label }}</label>
@@ -168,12 +180,35 @@
                                         {{ form.senha }}
                                     </div>
                                     <div class="mb-3">
+                                        <label for="{{ form.alertar_dias_antes.id_for_label }}" class="form-label">{{ form.alertar_dias_antes.label }}</label>
+                                        {{ form.alertar_dias_antes }}
+                                    </div>
+                                    <div class="mb-3">
                                         <label for="{{ form.whatsapp_confirmacao.id_for_label }}" class="form-label">{{ form.whatsapp_confirmacao.label }}</label>
                                         {{ form.whatsapp_confirmacao }}
                                     </div>
                                     <div class="mb-3">
-                                        <label for="{{ form.video_tutorial.id_for_label }}" class="form-label">Link passo-a-passo</label>
+                                        <label for="{{ form.video_tutorial.id_for_label }}" class="form-label">{{ form.video_tutorial.label }}</label>
+                                        
+                                        {% if form.instance.video_tutorial %}
+                                            <div class="alert alert-info p-2 mb-2" style="font-size: 0.875rem;">
+                                                <i class="fas fa-file-video me-1"></i>
+                                                <strong>Arquivo atual:</strong>
+                                                <a href="{{ form.instance.video_tutorial.url }}" target="_blank" class="text-decoration-none">
+                                                    {{ form.instance.video_tutorial.name|slice:":60" }}
+                                                </a>
+                                                <div class="mt-1">
+                                                    <small class="text-muted">
+                                                        <i class="fas fa-info-circle"></i> Envie um novo arquivo para substituir
+                                                    </small>
+                                                </div>
+                                            </div>
+                                        {% endif %}
+                                        
                                         {{ form.video_tutorial }}
+                                        {% if form.video_tutorial.errors %}
+                                            <div class="invalid-feedback d-block">{{ form.video_tutorial.errors }}</div>
+                                        {% endif %}
                                     </div>
                                 </div>
                             </div>
@@ -207,46 +242,31 @@
     </div>
 </div>
 
-<style>
-.section-header {
-    border-bottom: 2px solid #e9ecef;
-    padding-bottom: 0.5rem;
-}
-
-.section-header h6 {
-    font-weight: 600;
-}
-
-.form-label {
-    font-weight: 500;
-    color: #495057;
-    margin-bottom: 0.5rem;
-}
-
-.form-control, .form-select {
-    border: 1px solid #dee2e6;
-    border-radius: 0.375rem;
-    padding: 0.625rem 0.75rem;
-}
-
-.form-control:focus, .form-select:focus {
-    border-color: #0d6efd;
-    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
-}
-
-.form-text {
-    color: #6c757d;
-    margin-top: 0.25rem;
-}
-
-.btn-rounded {
-    border-radius: 10px;
-    font-weight: 500;
-    padding: 0.625rem 2rem;
-}
-</style>
-
 {% block extra_js %}
+{{ block.super }}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const valorInput = document.querySelector('#id_valor');
+        
+        if (valorInput) {
+            // Configura AutoNumeric com formato brasileiro
+            const anElement = new AutoNumeric(valorInput, {
+                currencySymbol: 'R$ ',
+                currencySymbolPlacement: 'p',
+                decimalCharacter: ',',
+                digitGroupSeparator: '.',
+                decimalPlaces: 2,
+                minimumValue: '0',
+                modifyValueOnWheel: false
+            });
+            
+            // Antes de enviar, formata para o banco de dados (remove formatação)
+            valorInput.closest('form').addEventListener('submit', function() {
+                valorInput.value = anElement.getNumber();
+            });
+        }
+    });
+</script>
 <script>
     // Ativa validação do Bootstrap
     (function () {
@@ -264,5 +284,5 @@
             })
     })()
 </script>
-{% endblock %}
+{% endblock extra_js %}
 {% endblock %}

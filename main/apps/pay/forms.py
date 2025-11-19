@@ -39,15 +39,31 @@ class ContaForm(forms.ModelForm):
         fields = '__all__'
         widgets = {
             'data_vencimento': forms.DateInput(
-                attrs={'class': 'form-control form-control-sm', 'type': 'date'}
+                attrs={'class': 'form-control form-control-sm', 'type': 'date'},
+                format='%Y-%m-%d'  # ← ADICIONE ESTA LINHA
             ),
             'data_pagamento': forms.DateInput(
-                attrs={'class': 'form-control form-control-sm', 'type': 'date'}
+                attrs={'class': 'form-control form-control-sm', 'type': 'date'},
+                format='%Y-%m-%d'  # ← ADICIONE ESTA LINHA
+            ),
+            'valor': forms.TextInput(  # ← ADICIONE ISSO
+                attrs={
+                    'class': 'form-control form-control-sm money-input',
+                    'placeholder': 'R$ 0,00'
+                }
             ),
         }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        
+        # ← ADICIONE ESTAS LINHAS AQUI (antes do loop do Bootstrap)
+        if self.instance and self.instance.pk:
+            if self.instance.data_vencimento:
+                self.initial['data_vencimento'] = self.instance.data_vencimento.strftime('%Y-%m-%d')
+            if self.instance.data_pagamento:
+                self.initial['data_pagamento'] = self.instance.data_pagamento.strftime('%Y-%m-%d')
+        
         # Bootstrap nos widgets
         for name, field in self.fields.items():
             widget = field.widget

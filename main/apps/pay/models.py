@@ -51,16 +51,66 @@ class ContaPagar(models.Model):
     RECORRENCIA_CHOICES = [
         ('unica', 'Única'),
         ('mensal', 'Mensal'),
+        ('bimestral', 'Bimestral'),
         ('trimestral', 'Trimestral'),
         ('semestral', 'Semestral'),
         ('anual', 'Anual'),
     ]
 
     ipva_multa_choices = [
-        ('sim', 'Sim'),
-        ('nao', 'Não'),
+        ('ipva', 'IPVA'),
+        ('multa', 'Multa'),
+        ('ipva+multa', 'IPVA + Multa'),
     ]
     
+    BANK_CHOICES = [
+    ("caixa", "Caixa Econômica Federal"),
+    ("bb", "Banco do Brasil"),
+    ("itau", "Itaú Unibanco"),
+    ("bradesco", "Bradesco"),
+    ("santander", "Santander Brasil"),
+    ("nubank", "Nubank"),
+    ("inter", "Banco Inter"),
+    ("c6", "C6 Bank"),
+    ("original", "Banco Original"),
+    ("pan", "Banco Pan"),
+    ("safra", "Banco Safra"),
+    ("mercantil", "Banco Mercantil do Brasil"),
+    ("banrisul", "Banrisul (Banco do Estado do Rio Grande do Sul)"),
+    ("bv", "Banco Votorantim (BV)"),
+    ("daycoval", "Banco Daycoval"),
+    ("bs2", "Banco BS2"),
+    ("digio", "Banco Digio"),
+    ("sicredi", "Banco Cooperativo Sicredi"),
+    ("sicoob", "Banco Cooperativo Sicoob"),
+    ("bnb", "Banco do Nordeste do Brasil"),
+    ("banestes", "Banestes (Banco do Estado do Espírito Santo)"),
+    ("alfa", "Banco Alfa"),
+    ("modal", "Banco Modal"),
+    ("pine", "Banco Pine"),
+    ("rendimento", "Banco Rendimento"),
+    ("rodobens", "Banco Rodobens"),
+    ("amazonia", "Banco da Amazônia"),
+    ("kebhana", "Banco KEB Hana do Brasil"),
+    ("johndeere", "Banco John Deere"),
+    ("mizuho", "Banco Mizuho do Brasil"),
+    ("outros", "Outros não cadastrados"),
+   ]
+    
+    STATUS_CHOICES = [
+        ('em_dia', '🟢 Em Dia'),
+        ('prox_vencer', '🟡 Próximo a Vencer'),
+        ('vence_hoje', '🟠 Vence Hoje'),
+        ('atrasado', '🔴 Em Atraso'),
+        
+    ]
+    
+    
+    ACCOUNT_TYPE_CHOICES = [
+    ("corrente", "Conta Corrente"),
+    ("poupanca", "Conta Poupança"),
+    ("pix", "Pix"),
+    ]
     # Informações básicas
     nome_conta = models.CharField(
         max_length=200,
@@ -74,11 +124,17 @@ class ContaPagar(models.Model):
         related_name='contas',
         verbose_name="Grupo de Conta"
     )
+
+    alertar_dias_antes = models.PositiveIntegerField(
+        verbose_name="Alertar quantos dias antes",
+        default=0,
+        help_text="Número de dias antes do vencimento para enviar o alerta."
+    )
     
     fixo_variado = models.CharField(
         max_length=10,
         choices=TIPO_CONTA_CHOICES,
-        verbose_name="Fixo ou Variado"
+        verbose_name="Valor Fixo ou Variado"
     )
     
     recorrencia = models.CharField(
@@ -124,7 +180,7 @@ class ContaPagar(models.Model):
     
     nome_pix = models.CharField(
         max_length=300,
-        verbose_name="Nome do pix",
+        verbose_name="Nome da Conta ou Pix",
         blank=True
     )
 
@@ -142,13 +198,15 @@ class ContaPagar(models.Model):
     
     conta_corrente_poupanca = models.CharField(
         max_length=50,
-        verbose_name="Conta Corrente/Poupança",
+        choices=ACCOUNT_TYPE_CHOICES,
+        verbose_name="Conta Corrente ou Poupança",
         blank=True
     )
     
     banco_origem = models.CharField(
         max_length=100,
-        verbose_name="Banco Origem",
+        choices=BANK_CHOICES,
+        verbose_name="Banco de Origem",
         blank=True
     )
     
@@ -180,10 +238,9 @@ class ContaPagar(models.Model):
     
     ipva_multa = models.CharField(
         max_length=10,
-        default="False",
         null=True,
         choices=ipva_multa_choices,
-        verbose_name="IPVA/IPVA + Multa"
+        verbose_name="IPVA/Multa"
     )
     
     video_tutorial = models.FileField(
@@ -230,6 +287,13 @@ class ContaPagar(models.Model):
     pago = models.BooleanField(
         default=False,
         verbose_name="Pago"
+    )
+    status = models.CharField(
+        max_length=20,
+        choices=STATUS_CHOICES,
+        default='em_dia',
+        blank=True,
+        verbose_name="Status da Conta"
     )
     
     data_pagamento = models.DateField(
