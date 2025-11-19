@@ -20,6 +20,7 @@ DEBUG = os.getenv('DEBUG', 'False') == 'True'
 PROD = os.getenv('PROD', 'False') == 'True'
 
 ALLOWED_HOSTS = ["*"]
+CSRF_TRUSTED_ORIGINS = ['http://localhost:8000', 'https://gestao.meganetrio.com.br']
 
 
 # Application definition
