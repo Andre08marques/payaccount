@@ -239,6 +239,7 @@ class ContaPagar(models.Model):
     ipva_multa = models.CharField(
         max_length=10,
         null=True,
+        blank=True,
         choices=ipva_multa_choices,
         verbose_name="IPVA/Multa"
     )
@@ -341,7 +342,6 @@ class Faturamento(models.Model):
     FaturamentoLoja = models.DecimalField(
         max_digits=10,
         decimal_places=2,
-        default=Decimal('0.00'),  # ADICIONADO
         validators=[MinValueValidator(Decimal('0.01'))],
         verbose_name="Valor do Faturamento Loja"
     )
@@ -349,7 +349,6 @@ class Faturamento(models.Model):
     FaturamentoModoBank_PIX = models.DecimalField(
         max_digits=10,
         decimal_places=2,
-        default=Decimal('0.00'),  # ADICIONADO
         validators=[MinValueValidator(Decimal('0.01'))],
         verbose_name="Valor do Faturamento ModoBank PIX"
     )
@@ -357,7 +356,6 @@ class Faturamento(models.Model):
     FaturamentoModoBank_Cartao = models.DecimalField(
         max_digits=10,
         decimal_places=2,
-        default=Decimal('0.00'),  # ADICIONADO
         validators=[MinValueValidator(Decimal('0.01'))],
         verbose_name="Valor do Faturamento ModoBank Cartão"
     )
@@ -365,7 +363,6 @@ class Faturamento(models.Model):
     FaturamentoEfiBank_Boleto = models.DecimalField(
         max_digits=10,
         decimal_places=2,
-        default=Decimal('0.00'),  # ADICIONADO
         validators=[MinValueValidator(Decimal('0.01'))],
         verbose_name="Valor do Faturamento EfiBank Boleto"
     )
@@ -373,7 +370,6 @@ class Faturamento(models.Model):
     FaturamentoCelcoin_Cartao = models.DecimalField(
         max_digits=10,
         decimal_places=2,
-        default=Decimal('0.00'),  # ADICIONADO
         validators=[MinValueValidator(Decimal('0.01'))],
         verbose_name="Valor do Faturamento Celcoin Cartão"
     )
@@ -381,7 +377,6 @@ class Faturamento(models.Model):
     FaturamentoMaquinaCartao = models.DecimalField(
         max_digits=10,
         decimal_places=2,
-        default=Decimal('0.00'),  # ADICIONADO
         validators=[MinValueValidator(Decimal('0.01'))],
         verbose_name="Valor do Faturamento Maquina Cartão"
     )

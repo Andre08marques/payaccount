@@ -2,6 +2,10 @@
 
 {% block title %}{% if object %}Editar{% else %}Novo{% endif %} Faturamento{% endblock %}
 
+{% block custom_css %}
+    <script src="https://cdn.jsdelivr.net/npm/autonumeric@4.8.1/dist/autoNumeric.min.js"></script>
+{% endblock custom_css %}
+
 {% block content %}
 <div class="container-fluid py-4">
     <div class="row justify-content-center">
@@ -122,80 +126,114 @@
         </div>
     </div>
 </div>
+{% block extra_js %}
+{{ block.super }}
 
 <script>
-// Script para calcular automaticamente o Faturamento Bruto Total
 document.addEventListener('DOMContentLoaded', function() {
-    // Seleciona todos os campos de valor
-    const camposPagamento = [
-        'FaturamentoModoBank_PIX',
-        'FaturamentoLoja',
-        'FaturamentoModoBank_Cartao',
-        'FaturamentoEfiBank_Boleto',
-        'FaturamentoCelcoin_Cartao',
-        'FaturamentoMaquinaCartao'
+    // Lista de IDs que terão máscara
+    const campos = [
+        'id_FaturamentoLoja',
+        'id_FaturamentoModoBank_PIX',
+        'id_FaturamentoModoBank_Cartao',
+        'id_FaturamentoEfiBank_Boleto',
+        'id_FaturamentoCelcoin_Cartao',
+        'id_FaturamentoMaquinaCartao'
     ];
-    
-    const campoTotal = document.querySelector('input[name="valor"]');
-    
-    // Função para calcular o total
-    function calcularTotal() {
-        let total = 0;
-        
-        camposPagamento.forEach(function(nomeCampo) {
-            const campo = document.querySelector(`input[name="${nomeCampo}"]`);
-            if (campo && campo.value) {
-                const valor = parseFloat(campo.value) || 0;
-                total += valor;
+
+    // Armazena instâncias do AutoNumeric
+    const autoNumericInstances = [];
+    let form = null;
+
+    // Inicializa AutoNumeric em cada campo
+    campos.forEach(function(campoId) {
+        const input = document.getElementById(campoId);
+        if (input) {
+            // Pega o formulário a partir do primeiro input
+            if (!form) {
+                form = input.closest('form');
             }
-        });
-        
-        // Atualiza o campo total com 2 casas decimais
-        campoTotal.value = total.toFixed(2);
-    }
-    
-    // Adiciona event listeners para todos os campos de pagamento
-    camposPagamento.forEach(function(nomeCampo) {
-        const campo = document.querySelector(`input[name="${nomeCampo}"]`);
-        if (campo) {
-            // Calcula ao digitar
-            campo.addEventListener('input', calcularTotal);
-            // Calcula ao sair do campo (blur)
-            campo.addEventListener('blur', calcularTotal);
+            
+            // Limpa o valor inicial se vier vazio
+            if (!input.value || input.value.trim() === '') {
+                input.value = '0';
+            }
+            
+            const an = new AutoNumeric(input, {
+                currencySymbol: '',
+                decimalCharacter: ',',
+                digitGroupSeparator: '.',
+                decimalPlaces: 2,
+                minimumValue: '0',
+                modifyValueOnWheel: false
+            });
+            
+            autoNumericInstances.push({ id: campoId, element: input, anInstance: an });
         }
     });
-    
-    // Torna o campo total somente leitura (opcional)
-    campoTotal.setAttribute('readonly', 'readonly');
-    campoTotal.style.backgroundColor = '#e9ecef';
-    
-    // Calcula o total inicial se houver valores preenchidos (modo edição)
+
+    // Função para calcular total
+    function calcularTotal() {
+        let total = 0;
+        autoNumericInstances.forEach(function(item) {
+            const valor = parseFloat(item.anInstance.getNumber()) || 0;
+            total += valor;
+        });
+        
+        const campoTotal = document.querySelector('input[name="valor"]');
+        if (campoTotal) {
+            campoTotal.value = total.toFixed(2).replace('.', ',');
+        }
+    }
+
+    // Adiciona eventos de cálculo
+    autoNumericInstances.forEach(function(item) {
+        item.element.addEventListener('input', calcularTotal);
+        item.element.addEventListener('blur', calcularTotal);
+    });
+
+    // Torna o campo total readonly
+    const campoTotal = document.querySelector('input[name="valor"]');
+    if (campoTotal) {
+        campoTotal.setAttribute('readonly', 'readonly');
+        campoTotal.style.backgroundColor = '#e9ecef';
+    }
+
+    // Calcula total inicial
     calcularTotal();
-});
-</script>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
-
-<script>
-$(document).ready(function() {
-    // Aplica máscara de moeda
-    $('input[data-mask="real"]').mask('#.##0,00', {reverse: true});
-
-    // Antes de enviar o form, converte para padrão numérico
-    $('form').on('submit', function() {
-        $('input[data-mask="real"]').each(function() {
-            let val = $(this).val();
-            if (val) {
-                // Remove pontos e troca vírgula por ponto
-                val = val.replace(/\./g, '').replace(',', '.');
-                $(this).val(val);
+    // Converte valores antes de enviar
+    if (form) {
+        form.addEventListener('submit', function() {
+            // Converte cada campo formatado para número puro
+            autoNumericInstances.forEach(function(item) {
+                const numeroLimpo = item.anInstance.getNumber();
+                item.element.value = numeroLimpo;
+            });
+            
+            // Converte também o campo total
+            if (campoTotal) {
+                const valorTotal = campoTotal.value.replace(/\./g, '').replace(',', '.');
+                campoTotal.value = valorTotal;
             }
         });
-    });
+    }
+
+    // Validação do Bootstrap
+    (function () {
+        'use strict'
+        var forms = document.querySelectorAll('.needs-validation')
+        Array.prototype.slice.call(forms).forEach(function (form) {
+            form.addEventListener('submit', function (event) {
+                if (!form.checkValidity()) {
+                    event.preventDefault()
+                    event.stopPropagation()
+                }
+                form.classList.add('was-validated')
+            }, false)
+        })
+    })()
 });
 </script>
-
-
-
+{% endblock extra_js %}
 {% endblock %}

@@ -146,97 +146,63 @@ class FaturamentoForm(forms.ModelForm):
         if self.instance and self.instance.pk and self.instance.mes_referencia:
             self.initial['mes_referencia'] = self.instance.mes_referencia.strftime('%Y-%m-%d')
     
-    # Sobrescrever os campos para garantir formatação consistente
-    FaturamentoModoBank_PIX = forms.DecimalField(
-        max_digits=10,
-        decimal_places=2,
-        required=False,
-        localize=False,  # Importante: desabilita formatação com vírgula
-        widget=forms.NumberInput(attrs={
-            'class': 'form-control',
-            'step': '0.01',
-            'min': '0.01',
-        })
-    )
+    def clean_FaturamentoLoja(self):
+        valor = self.cleaned_data.get('FaturamentoLoja')
+        return self._limpar_valor_monetario(valor)
     
-    FaturamentoLoja = forms.DecimalField(
-        max_digits=10,
-        decimal_places=2,
-        required=False,
-        localize=False,
-        widget=forms.NumberInput(attrs={
-            'class': 'form-control',
-            'step': '0.01',
-            'min': '0.01',
-            
-        })
-    )
-
-    FaturamentoModoBank_Cartao = forms.DecimalField(
-        max_digits=10,
-        decimal_places=2,
-        required=False,
-        localize=False,
-        widget=forms.NumberInput(attrs={
-            'class': 'form-control',
-            'step': '0.01',
-            'min': '0.01',
-            'data-mask': 'real'
-        })
-    )
+    def clean_FaturamentoModoBank_PIX(self):
+        valor = self.cleaned_data.get('FaturamentoModoBank_PIX')
+        return self._limpar_valor_monetario(valor)
     
-    FaturamentoEfiBank_Boleto = forms.DecimalField(
-        max_digits=10,
-        decimal_places=2,
-        required=False,
-        localize=False,
-        widget=forms.NumberInput(attrs={
-            'class': 'form-control',
-            'step': '0.01',
-            'min': '0.01',
-            'data-mask': 'real'
-        })
-    )
+    def clean_FaturamentoModoBank_Cartao(self):
+        valor = self.cleaned_data.get('FaturamentoModoBank_Cartao')
+        return self._limpar_valor_monetario(valor)
     
-    FaturamentoCelcoin_Cartao = forms.DecimalField(
-        max_digits=10,
-        decimal_places=2,
-        required=False,
-        localize=False,
-        widget=forms.NumberInput(attrs={
-            'class': 'form-control',
-            'step': '0.01',
-            'min': '0.01',
-            'data-mask': 'real'
-        })
-    )
+    def clean_FaturamentoEfiBank_Boleto(self):
+        valor = self.cleaned_data.get('FaturamentoEfiBank_Boleto')
+        return self._limpar_valor_monetario(valor)
     
-    FaturamentoMaquinaCartao = forms.DecimalField(
-        max_digits=10,
-        decimal_places=2,
-        required=False,
-        localize=False,
-        widget=forms.NumberInput(attrs={
-            'class': 'form-control',
-            'step': '0.01',
-            'min': '0.01',
-            'data-mask': 'real'
-        })
-    )
+    def clean_FaturamentoCelcoin_Cartao(self):
+        valor = self.cleaned_data.get('FaturamentoCelcoin_Cartao')
+        return self._limpar_valor_monetario(valor)
     
-    valor = forms.DecimalField(
-        max_digits=10,
-        decimal_places=2,
-        required=True,
-        localize=False,
-        widget=forms.NumberInput(attrs={
-            'class': 'form-control',
-            'step': '0.01',
-            'min': '0.01',
-            'readonly': 'readonly',
-            
-        })
-    )
+    def clean_FaturamentoMaquinaCartao(self):
+        valor = self.cleaned_data.get('FaturamentoMaquinaCartao')
+        return self._limpar_valor_monetario(valor)
+    
+    def clean_valor(self):
+        valor = self.cleaned_data.get('valor')
+        return self._limpar_valor_monetario(valor)
+    
+    def _limpar_valor_monetario(self, valor):
+        """
+        Converte valores monetários formatados (ex: "1.234,56" ou "1234.56") 
+        para Decimal válido
+        """
+        from decimal import Decimal, InvalidOperation
+        
+        if valor is None or valor == '':
+            return Decimal('0.00')
+        
+        # Se já for Decimal, retorna
+        if isinstance(valor, Decimal):
+            return valor
+        
+        # Converte para string e limpa
+        valor_str = str(valor).strip()
+        
+        # Remove espaços e símbolo de moeda
+        valor_str = valor_str.replace('R$', '').replace(' ', '')
+        
+        # Verifica se tem vírgula (formato brasileiro)
+        if ',' in valor_str:
+            # Remove pontos (separadores de milhar) e troca vírgula por ponto
+            valor_str = valor_str.replace('.', '').replace(',', '.')
+        
+        try:
+            return Decimal(valor_str)
+        except (InvalidOperation, ValueError):
+            raise forms.ValidationError('Informe um valor monetário válido.')
     
     mes_referencia = forms.DateField(
         localize=False,
@@ -253,6 +219,7 @@ class FaturamentoForm(forms.ModelForm):
     class Meta:
         model = Faturamento
         fields = [
+            'FaturamentoLoja',
             'mes_referencia',
             'FaturamentoModoBank_PIX',
             'FaturamentoModoBank_Cartao',
@@ -266,6 +233,36 @@ class FaturamentoForm(forms.ModelForm):
             'observacao': forms.Textarea(attrs={
                 'class': 'form-control',
                 'rows': 3
+            }),
+            'FaturamentoLoja': forms.TextInput(attrs={
+                'class': 'form-control money-input',
+                'placeholder': '0,00',
+                'type': 'text'
+            }),
+            'FaturamentoModoBank_PIX': forms.TextInput(attrs={
+                'class': 'form-control money-input',
+                'placeholder': '0,00'
+            }),
+            'FaturamentoModoBank_Cartao': forms.TextInput(attrs={
+                'class': 'form-control money-input',
+                'placeholder': '0,00'
+            }),
+            'FaturamentoEfiBank_Boleto': forms.TextInput(attrs={
+                'class': 'form-control money-input',
+                'placeholder': '0,00'
+            }),
+            'FaturamentoCelcoin_Cartao': forms.TextInput(attrs={
+                'class': 'form-control money-input',
+                'placeholder': '0,00'
+            }),
+            'FaturamentoMaquinaCartao': forms.TextInput(attrs={
+                'class': 'form-control money-input',
+                'placeholder': '0,00'
+            }),
+            'valor': forms.TextInput(attrs={
+                'class': 'form-control money-input',
+                'placeholder': '0,00',
+                'readonly': 'readonly'
             }),
         }
         labels = {
