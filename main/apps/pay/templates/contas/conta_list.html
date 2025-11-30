@@ -6,7 +6,7 @@
 <div class="container-fluid py-4">
     <!-- Cards de Resumo -->
     <div class="row mb-4">
-        <div class="col-md-3">
+        <div class="col-md-2">
             <div class="card border-0 shadow-sm">
                 <div class="card-body">
                     <h6 class="mb-1">TOTAL DAS CONTAS</h6>
@@ -21,6 +21,15 @@
                     <h6 class="mb-1 text-dark">EM DIA</h6>
                     <h4 class="mb-0 text-dark">R$ {{ total_em_dia|default:"0,00" }}</h4>
                     <small class="text-dark">{{ qtd_em_dia }} contas</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="card border-0 shadow-sm" style="background-color: #FFE122;">
+                <div class="card-body">
+                    <h6 class="mb-1 text-dark">PRÓXIMO A VENCER</h6>
+                    <h4 class="mb-0 text-dark">R$ {{ total_proximo_vencer|default:"0,00" }}</h4>
+                    <small class="text-dark">{{ qtd_proximo_vencer }} contas</small>
                 </div>
             </div>
         </div>
@@ -42,7 +51,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-2">
             <div class="card border-0 shadow-sm bg-white">
                 <div class="card-body">
                     <h6 class="mb-1 text-dark">FATURAMENTO</h6>

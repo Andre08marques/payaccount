@@ -122,6 +122,14 @@
                                         {{ form.data_vencimento }}
                                     </div>
                                     <div class="mb-3">
+                                        <label for="{{ form.alertar_dias_antes.id_for_label }}" class="form-label">{{ form.alertar_dias_antes.label }}</label>
+                                        {{ form.alertar_dias_antes }}
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="{{ form.whatsapp_contato_alerta.id_for_label }}" class="form-label">{{ form.whatsapp_contato_alerta.label }}</label>
+                                        {{ form.whatsapp_contato_alerta }}
+                                    </div>
+                                    <div class="mb-3">
                                         <label for="{{ form.valor.id_for_label }}" class="form-label">{{ form.valor.label }}*</label>
                                         {{ form.valor }}
                                     </div>
@@ -217,10 +225,7 @@
                                         <label for="{{ form.senha.id_for_label }}" class="form-label">{{ form.senha.label }}</label>
                                         {{ form.senha }}
                                     </div>
-                                    <div class="mb-3">
-                                        <label for="{{ form.alertar_dias_antes.id_for_label }}" class="form-label">{{ form.alertar_dias_antes.label }}</label>
-                                        {{ form.alertar_dias_antes }}
-                                    </div>
+                                    
                                     <div class="mb-3">
                                         <label for="{{ form.whatsapp_confirmacao.id_for_label }}" class="form-label">{{ form.whatsapp_confirmacao.label }}</label>
                                         {{ form.whatsapp_confirmacao }}

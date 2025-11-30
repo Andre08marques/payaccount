@@ -271,6 +271,13 @@ class ContaPagar(models.Model):
         blank=True,
         help_text="Formato: (00) 00000-0000"
     )
+
+    whatsapp_contato_alerta = models.CharField(
+        max_length=20,
+        verbose_name="WhatsApp para Contato de Alerta",
+        blank=True,
+        help_text="Formato: (00) 00000-0000"
+    )
     
     link_acesso_pagamento = models.URLField(
         max_length=500,

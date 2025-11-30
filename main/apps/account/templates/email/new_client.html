@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333333;
+            margin: 0;
+            padding: 0;
+        }
+        .email-container {
+            max-width: 600px;
+            margin: 0 auto;
+            border: 1px solid #dddddd;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .header {
+            background-color: #004d99;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .header H2 {
+            color: #ffffff;
+        }
+        .content {
+            padding: 20px;
+        }
+        .footer {
+            background-color: #f8f8f8;
+            text-align: center;
+            padding: 10px;
+            font-size: 0.9em;
+            color: #777777;
+        }
+        .button {
+            display: inline-block;
+            margin: 20px 0;
+            padding: 10px 20px;
+            background-color: #004d99;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <div class="header">
+            <h2>EQUIPE ZAPENVIA</h2>
+        </div>
+        <div class="content">
+            <h1>Obrigado por se cadastrar!</h1>
+            <p>Olá {{ name }},</p>
+            <p>Seu cadastro foi realizado com sucessso!</p>
+            <p>O próximo passo é entrar no sistema, criar uma instância e lê o qrcode para começar a enviar mensagem</p>
+            <p><strong>URL:</strong>https://zapenvia.nawebsolucoes.com.br</p>
+            <p><strong>Email cadastrado:</strong> {{  email }}</p>
+            <p>Em caso de perca ou esquecimento de senha, na tela de login tem um botão esqueci senha.</p>
+            <p>Atenciosamente,</p>
+            <p><strong>Na web soluções</strong></p>
+        </div>
+        <div class="footer">
+            <p>Este é um e-mail automático, por favor, não responda.</p>
+            <p>&copy; 2024 Na web Soluções. Todos os direitos reservados.</p>
+        </div>
+    </div>
+</body>
+</html>

@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     # my apps
     'main.apps.pay',
     'main.apps.home',
+    'main.apps.account',
 ]
 
 MIDDLEWARE = [

@@ -61,6 +61,17 @@
                     </a>
                 </li>
 
+                <li class="nav-item">
+                    <!-- {% url 'faturamento_list' as faturamento_list %} -->
+                    <a href="{% url 'userlist' %}" class="nav-link {% if request.resolver_match.url_name == 'userlist' %} active {% endif %}">
+                        <i class="nav-icon fas fa-users-cog"></i>
+                        <p>
+                            Usuários
+
+                        </p>
+                    </a>
+                </li>
+
 
                 <li class="nav-item">
                     <form method="post" action="{% url 'logout' %}" style="display: inline;">

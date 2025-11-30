@@ -1,0 +1,126 @@
+{% extends 'main_app/base/base.html' %}
+{% load static %}
+{% block page_title %}{{ page_title }}{% endblock page_title %}
+
+{% block content %}
+{% include "main_app/base/messages.html" %}
+<section class="content" id="listaraddarea">
+    <div class="container-fluid">
+        <div class="row justify-content-between">
+            <div class="ml-2"> 
+                <a 
+               hx-get="{% url 'useradd' %}" 
+               class="btn btn-primary mb-2 text-white"
+               hx-target="#dialog" 
+               data-toggle="modal"
+               data-target="#modal">ADICIONAR</a>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <div class="card">
+                    <div class="card-header">
+                      <h3 class="card-title"><b>{{ page_title }}</b></h3>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        <table id="table_db" class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th scope="col">USUÁRIO</th>
+                                    <th scope="col">EMAIL</th>
+                                    <th scope="col">Opções</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                              {% for user in users %}
+                                <tr>
+                                <th scope="row">{{ forloop.counter }}</th>
+                                <td>{{ user.username }}</td>
+                                <td>{{ user.email }}</td>
+                                <td>
+
+                                  <a hx-get="{% url 'userchangepassword' user.id %}" 
+                                    class="btn btn-warning"
+                                    hx-target="#dialog" 
+                                    href=""
+                                    data-toggle="modal" data-target="#modal"><i class="fas fa-unlock-alt"></i></a>
+
+                                    <a hx-get="{% url 'useredit' user.id %}" 
+                                    class="btn btn-primary"
+                                    hx-target="#dialog" 
+                                    href=""
+                                    data-toggle="modal" data-target="#modal"><i class="far fa-edit"></i></a>
+
+                                    <a
+                                      class="btn btn-danger"
+                                      onclick="return confirm('Tem certeza que deseja excluir?')" 
+                                      href="{% url 'userdelete' user.id %}"
+                                      ><i class="fas fa-trash-alt"></i></a>
+
+                                </td>
+                                </tr>
+                              {% endfor %}
+                            </tbody>
+                          </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+  </div>
+</div>
+
+<!-- o modal de editar vai ser inserido aqui -->
+<div id="modal" class="modal fade">
+    <div id="dialog" class="modal-dialog" hx-target="this"></div>
+</div>
+             
+  <!-- Empty toast to show the message -->
+  <div class="p-3" style="position: fixed; top: 6%; right:0;">
+    <div id="toast" class="toast align-items-center text-white bg-success border-0">
+      <div class="d-flex">
+        <div id="toast-body" class="toast-body"></div>
+        <button type="button" class="close m-2" data-dismiss="toast" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock content %}
+
+{% block custom_js %} 
+   <script>
+      ;(function () {
+        htmx.on("htmx:afterSwap", (e) => {
+            // Response targeting #dialog => show the modal
+            if (e.detail.target.id == "dialog") {
+            $("#modal").modal("show")
+            }
+        })
+
+        htmx.on("htmx:beforeSwap", (e) => {
+            console.log("htmx:beforeSwap", e)
+            // Empty response targeting #dialog => hide the modal
+            if (e.detail.target.id == "dialog" && !e.detail.xhr.response) {
+            $("#modal").modal("hide")
+            e.detail.shouldSwap = false
+            }
+        })
+        // Remove dialog content after hiding
+        $("#modal").on("hidden.bs.modal", () => {
+            $("#dialog").empty()
+        })
+        })()
+        ;(function () {
+            $("#toast").toast({ delay: 2000 })
+
+            htmx.on("showMessage", (e) => {
+                $("#toast-body").text(e.detail.value)
+                $("#toast").toast("show")
+            })
+            })()
+   </script>
+{% endblock custom_js %}
