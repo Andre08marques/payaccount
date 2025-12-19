@@ -193,6 +193,11 @@
                                         {{ form.whatsapp_confirmacao }}
                                     </div>
                                     <div class="mb-3">
+                                        <label for="{{ form.mensagem_confirmacao.id_for_label }}" class="form-label">{{ form.mensagem_confirmacao.label }}</label>
+                                        {{ form.mensagem_confirmacao }}
+                                    </div>
+                                    
+                                    <div class="mb-3">
                                         <label for="{{ form.video_tutorial.id_for_label }}" class="form-label">{{ form.video_tutorial.label }}</label>
                                         
                                         {% if form.instance.video_tutorial %}

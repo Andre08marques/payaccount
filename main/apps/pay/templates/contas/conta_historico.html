@@ -1,0 +1,153 @@
+<!-- filepath: /Users/andremarquesdevops/Documents/project/payaccount/main/apps/pay/templates/contas/conta_historico.html -->
+{% extends 'main_app/base/base.html' %}
+
+{% block title %}Histórico - {{ conta.nome_conta }}{% endblock %}
+
+{% block custom_css %}
+<style>
+    .conta-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 10px;
+        padding: 30px;
+        color: white;
+        margin-bottom: 30px;
+    }
+    .stat-box {
+        background: white;
+        border-radius: 10px;
+        padding: 20px;
+        text-align: center;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .timeline {
+        position: relative;
+        padding-left: 30px;
+    }
+    .timeline::before {
+        content: '';
+        position: absolute;
+        left: 10px;
+        top: 0;
+        bottom: 0;
+        width: 2px;
+        background: #dee2e6;
+    }
+    .timeline-item {
+        position: relative;
+        padding-bottom: 30px;
+    }
+    .timeline-marker {
+        position: absolute;
+        left: -25px;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: #28a745;
+        border: 3px solid white;
+        box-shadow: 0 0 0 2px #28a745;
+    }
+    .timeline-marker.atrasado {
+        background: #dc3545;
+        box-shadow: 0 0 0 2px #dc3545;
+    }
+    .timeline-content {
+        background: white;
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+    <!-- Header da Conta -->
+    <div class="conta-header">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <h2><i class="fas fa-file-invoice-dollar"></i> {{ conta.nome_conta }}</h2>
+                <p class="mb-0">
+                    <i class="fas fa-folder"></i> {{ conta.grupo_conta.nome }} | 
+                    <i class="fas fa-calendar"></i> Próximo vencimento: {{ conta.data_vencimento|date:"d/m/Y" }}
+                </p>
+            </div>
+            <div class="col-md-4 text-end">
+                <a href="{% url 'conta_list' %}" class="btn btn-light">
+                    <i class="fas fa-arrow-left"></i> Voltar
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Estatísticas -->
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="stat-box">
+                <h5 class="text-muted">Total Pago</h5>
+                <h2 class="text-primary">R$ {{ total_pago|floatformat:2 }}</h2>
+                <small>Em {{ total_pagamentos }} pagamentos</small>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="stat-box">
+                <h5 class="text-muted">Total de Pagamentos</h5>
+                <h2 class="text-success">{{ total_pagamentos }}</h2>
+                <small>Registros no histórico</small>
+            </div>
+        </div>
+        
+    </div>
+
+    <!-- Timeline de Pagamentos -->
+    <div class="card">
+        <div class="card-header">
+            <h5 class="mb-0"><i class="fas fa-history"></i> Linha do Tempo de Pagamentos</h5>
+        </div>
+        <div class="card-body">
+            {% if historicos %}
+            <div class="timeline">
+                {% for historico in historicos %}
+                <div class="timeline-item">
+                    <div class="timeline-marker {% if historico.dias_atraso > 0 %}atrasado{% endif %}"></div>
+                    <div class="timeline-content">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <h5>
+                                    <i class="fas fa-check-circle text-success"></i> 
+                                    Pagamento Realizado
+                                </h5>
+                                <p class="mb-2">
+                                    <strong>Data do Pagamento:</strong> {{ historico.data_pagamento|date:"d/m/Y" }}<br>
+                                    <strong>Vencimento Original:</strong> {{ historico.data_vencimento_original|date:"d/m/Y" }}<br>
+                                    <strong>Valor:</strong> R$ {{ historico.valor_pago|floatformat:2 }}
+                                </p>
+                                {% if historico.tipo_pagamento %}
+                                <p class="mb-0">
+                                    <span class="badge bg-info">
+                                        <i class="fas fa-credit-card"></i> {{ historico.get_tipo_pagamento_display }}
+                                    </span>
+                                </p>
+                                {% endif %}
+                                {% if historico.observacao %}
+                                <p class="mt-2 mb-0">
+                                    <small><i class="fas fa-comment"></i> {{ historico.observacao }}</small>
+                                </p>
+                                {% endif %}
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="text-center py-5">
+                <i class="fas fa-inbox fa-4x text-muted mb-3"></i>
+                <h4 class="text-muted">Nenhum Pagamento Registrado</h4>
+                <p>Esta conta ainda não possui histórico de pagamentos.</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

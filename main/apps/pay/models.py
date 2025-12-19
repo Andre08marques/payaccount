@@ -102,6 +102,7 @@ class ContaPagar(models.Model):
         ('prox_vencer', '🟡 Próximo a Vencer'),
         ('vence_hoje', '🟠 Vence Hoje'),
         ('atrasado', '🔴 Em Atraso'),
+        ('pago', '✅ Pago'),
         
     ]
     
@@ -279,6 +280,12 @@ class ContaPagar(models.Model):
         help_text="Formato: (00) 00000-0000"
     )
     
+    mensagem_confirmacao = models.TextField(
+        verbose_name="Mensagem de Confirmação de Pagamento",
+        blank=True,
+        help_text="Mensagem que será enviada ao cliente quando a conta for paga. Use {{nome_conta}}, {{valor}}, {{data_pagamento}}"
+    )
+    
     link_acesso_pagamento = models.URLField(
         max_length=500,
         verbose_name="Link de Acesso ao Pagamento",
@@ -418,3 +425,70 @@ class Faturamento(models.Model):
     def get_ultimo_faturamento(cls):
         """Retorna o último faturamento registrado"""
         return cls.objects.order_by('-mes_referencia').first()
+
+
+class HistoricoPagamento(models.Model):
+    """Registro histórico de pagamentos realizados"""
+    
+    conta = models.ForeignKey(
+        ContaPagar,
+        on_delete=models.CASCADE,
+        related_name='historico_pagamentos',
+        verbose_name="Conta"
+    )
+    
+    nome_conta = models.CharField(
+        max_length=200,
+        verbose_name="Nome da Conta"
+    )
+    
+    grupo_conta = models.ForeignKey(
+        GrupoConta,
+        on_delete=models.SET_NULL,
+        null=True,
+        verbose_name="Grupo de Conta"
+    )
+    
+    valor_pago = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        verbose_name="Valor Pago"
+    )
+    
+    data_vencimento_original = models.DateField(
+        verbose_name="Data de Vencimento Original"
+    )
+    
+    data_pagamento = models.DateField(
+        verbose_name="Data do Pagamento"
+    )
+    
+    dias_atraso = models.IntegerField(
+        default=0,
+        verbose_name="Dias de Atraso"
+    )
+    
+    tipo_pagamento = models.CharField(
+        max_length=20,
+        verbose_name="Tipo de Pagamento",
+        blank=True
+    )
+    
+    observacao = models.TextField(
+        verbose_name="Observação",
+        blank=True
+    )
+    
+    criado_em = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        verbose_name = "Histórico de Pagamento"
+        verbose_name_plural = "Históricos de Pagamentos"
+        ordering = ['-data_pagamento']
+        indexes = [
+            models.Index(fields=['conta', 'data_pagamento']),
+            models.Index(fields=['data_pagamento']),
+        ]
+    
+    def __str__(self):
+        return f"{self.nome_conta} - R$ {self.valor_pago} - {self.data_pagamento.strftime('%d/%m/%Y')}"
