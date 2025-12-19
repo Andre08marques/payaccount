@@ -12,9 +12,13 @@ from decimal import Decimal
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
+from dateutil.relativedelta import relativedelta
 
-from .models import GrupoConta, ContaPagar, Faturamento
+from .models import GrupoConta, ContaPagar, Faturamento, HistoricoPagamento
 from .forms import GrupoContaForm, ContaForm, FaturamentoForm
+from .tasks import enviar_confirmacao_pagamento
+from main.src.agents.evolution_agent import Evolution
+from django.conf import settings
 from datetime import timedelta
 
 
@@ -212,12 +216,55 @@ class ContaPagoView(View):
 
     def get(self, request, pk):
         conta = get_object_or_404(ContaPagar, pk=pk)
-        conta.pago = True
-        conta.data_pagamento = timezone.now().date()
+        data_pagamento = timezone.now().date()
+        
+        # Calcular dias de atraso
+        dias_atraso = (data_pagamento - conta.data_vencimento).days
+        if dias_atraso < 0:
+            dias_atraso = 0
+        
+        # Salvar no histórico
+        HistoricoPagamento.objects.create(
+            conta=conta,
+            nome_conta=conta.nome_conta,
+            grupo_conta=conta.grupo_conta,
+            valor_pago=conta.valor,
+            data_vencimento_original=conta.data_vencimento,
+            data_pagamento=data_pagamento,
+            dias_atraso=dias_atraso,
+            tipo_pagamento=conta.tipo_pagamento,
+            observacao=f"Pagamento registrado via sistema"
+        )
+        
+        # Enviar mensagem de confirmação em segundo plano via Celery
+        if conta.whatsapp_confirmacao and conta.mensagem_confirmacao:
+            enviar_confirmacao_pagamento.delay(
+                conta.id,
+                data_pagamento.strftime('%Y-%m-%d')
+            )
+        
+        # Atualizar data de vencimento conforme recorrência
+        nova_data_vencimento = conta.data_vencimento
+        
+        if conta.recorrencia == 'mensal':
+            nova_data_vencimento = conta.data_vencimento + relativedelta(months=1)
+        elif conta.recorrencia == 'bimestral':
+            nova_data_vencimento = conta.data_vencimento + relativedelta(months=2)
+        elif conta.recorrencia == 'trimestral':
+            nova_data_vencimento = conta.data_vencimento + relativedelta(months=3)
+        elif conta.recorrencia == 'semestral':
+            nova_data_vencimento = conta.data_vencimento + relativedelta(months=6)
+        elif conta.recorrencia == 'anual':
+            nova_data_vencimento = conta.data_vencimento + relativedelta(years=1)
+        
+        # Resetar a conta para o próximo vencimento
+        conta.pago = False
         conta.status = 'em_dia'
+        conta.data_pagamento = None
+        conta.data_vencimento = nova_data_vencimento
         conta.save()
     
-        messages.success(request, "Conta paga com sucesso!")
+        messages.success(request, f"Conta paga com sucesso! Próximo vencimento: {nova_data_vencimento.strftime('%d/%m/%Y')}")
         return redirect('conta_list')
 
 
@@ -282,3 +329,29 @@ class FaturamentoDeleteView(LoginRequiredMixin, DeleteView):
     model = Faturamento
     template_name = 'faturamento/faturamento_confirm_delete.html'
     success_url = reverse_lazy('faturamento_list')
+
+
+@method_decorator(login_required, name='dispatch')
+class ContaHistoricoView(View):
+    template_name = 'contas/conta_historico.html'
+
+    def get(self, request, pk):
+        conta = get_object_or_404(ContaPagar, pk=pk)
+        historicos = HistoricoPagamento.objects.filter(conta=conta).order_by('-data_pagamento')
+        
+        # Estatísticas da conta
+        total_pago = historicos.aggregate(total=Sum('valor_pago'))['total'] or 0
+        total_pagamentos = historicos.count()
+        media_dias_atraso = historicos.aggregate(media=Sum('dias_atraso'))['media'] or 0
+        if total_pagamentos > 0:
+            media_dias_atraso = media_dias_atraso / total_pagamentos
+
+        context = {
+            'conta': conta,
+            'historicos': historicos,
+            'total_pago': total_pago,
+            'total_pagamentos': total_pagamentos,
+            'media_dias_atraso': round(media_dias_atraso, 1)
+        }
+
+        return render(request, self.template_name, context)

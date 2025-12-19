@@ -36,6 +36,9 @@ INSTALLED_APPS = [
     'main.apps.pay',
     'main.apps.home',
     'main.apps.account',
+    # external apps
+    'django_celery_results',
+    'django_celery_beat',
 ]
 
 MIDDLEWARE = [
@@ -67,6 +70,23 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'main.wsgi.application'
 
+# save Celery task results in Django's database
+result_backend = "django-db"
+result_extended = True
+broker_connection_retry_on_startup = True
+
+# This configures Redis as the datastore between Django + Celery
+CELERY_BROKER_URL = os.getenv('CELERY_BROKER_REDIS_URL')
+
+# this allows you to schedule items in the Django admin.
+CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers.DatabaseScheduler'
+
+CELERY_RESULT_BACKEND = 'django-db'
+
+
+# Configurar o fuso horário no Celery
+CELERY_TIMEZONE = 'America/Sao_Paulo'  
+CELERY_ENABLE_UTC = True
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
@@ -140,3 +160,13 @@ LOGIN_REDIRECT_URL = 'home'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+'''  instancia de alertas '''
+
+EVOLUTION_API_URL = os.getenv("EVOLUTION_API_URL")
+EVOLUTIONMASTERKEY = os.getenv("EVOLUTIONMASTERKEY")
+
+INSTANCE_NAME = os.getenv("INSTANCE_NAME")
+INSTANCE_KEY = os.getenv("INSTANCE_KEY")
+INSTANCE_NUMBER = os.getenv ("INSTANCE_NUMBER")

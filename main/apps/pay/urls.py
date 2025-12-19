@@ -15,7 +15,8 @@ from .views import (
     FaturamentoCreateView, 
     FaturamentoUpdateView, 
     FaturamentoDeleteView,
-    ContaPagoView
+    ContaPagoView,
+    ContaHistoricoView
 )
 
 urlpatterns = [
@@ -28,9 +29,9 @@ urlpatterns = [
     path('contas/<int:pk>/editar/',       ContaPagarUpdateView.as_view(), name='conta_update'),
     path('contas/<int:pk>/pagar/',        ContaPagoView.as_view(), name='conta_pagar'),
     path('contas/<int:pk>/excluir/',      ContaPagarDeleteView.as_view(), name='conta_delete'),
+    path('contas/<int:pk>/historico/',    ContaHistoricoView.as_view(), name='conta_historico'),
     path('faturamento/',                 FaturamentoListView.as_view(), name='faturamento_list'),
     path('faturamento/novo/',            FaturamentoCreateView.as_view(), name='faturamento_create'),
     path('faturamento/<int:pk>/editar/', FaturamentoUpdateView.as_view(), name='faturamento_update'),
     path('faturamento/<int:pk>/excluir/', FaturamentoDeleteView.as_view(), name='faturamento_delete'),
-
 ]
